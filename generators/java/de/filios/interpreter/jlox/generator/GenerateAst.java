@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class GenerateAst {
 
@@ -23,52 +24,21 @@ public class GenerateAst {
         generateAstClass("Expr", "de.filios.interpreters.jlox.ast", astDefinition);
     }
 
-    private static void generateAstClass(String baseName, String packageName, List<String> astDefinition) throws IOException{
+    private static void generateAstClass(String baseName, String packageName, List<String> astDefinition) throws IOException {
 
-        String packageDir = packageName.replace('.','/');
+        String packageDir = packageName.replace('.', '/');
         Path fullPath = Path.of(outputDir + "/" + packageDir + "/" + baseName + ".java");
 
         PrintWriter printWriter = new PrintWriter(fullPath.toFile(), StandardCharsets.UTF_8);
 
         printClassHeader(baseName, packageName, printWriter);
-
-        astDefinition.stream().forEach((rule)->printConcreteClass(printWriter,baseName, rule));
-
+        printVisitorInterface(printWriter, baseName, astDefinition);
+        printSubclasses(baseName, astDefinition, printWriter);
         printClassTail(printWriter);
 
     }
 
-    private static void printConcreteClass(PrintWriter printWriter, String baseName, String rule) {
-        printWriter.println();
-        printWriter.println("\t/**");
-        printWriter.println("\t    Generated Class from following rule");
-        printWriter.println("\t    "+ rule);
-        printWriter.println("\t**/");
 
-        String[] leftAndRight = rule.split("->");
-        String className = leftAndRight[0];
-
-        printWriter.println("\tpublic static class "+ className.strip() + " extends " + baseName + " {");
-        printWriter.println();
-        printWriter.println("\t\t"+ className.strip() + "( " + leftAndRight[1].trim() + ") {");
-        String[] variables =leftAndRight[1].split(",");
-        for (String variable : variables) {
-            String [] typeAndName = variable.trim().split(" ");
-            String type = typeAndName[0].trim();
-            String name = typeAndName[1].trim();
-            printWriter.println("\t\t\t" + "this." + name + " = " + name + ";");
-        }
-        printWriter.println("\t\t}");
-        for (String variable : variables) {
-            String [] typeAndName = variable.trim().split(" ");
-            String type = typeAndName[0].trim();
-            String name = typeAndName[1].trim();
-            printWriter.println("\t\t" + "final " + type + " " + name + ";");
-        }
-
-        printWriter.println("\t}");
-
-    }
 
     private static void printClassTail(PrintWriter printWriter) {
         printWriter.println();
@@ -83,5 +53,73 @@ public class GenerateAst {
         printWriter.println("import de.filios.interpreters.jlox.Token;");
         printWriter.println();
         printWriter.println("abstract class " + baseName + " {");
+        printWriter.println();
+        printWriter.println("\tpublic abstract <R> R accept (Visitor<R> visitor);");
+        printWriter.println();
+
     }
+
+    private static void printVisitorInterface(PrintWriter printWriter, String baseName, List<String> astDefinition) {
+        printWriter.println();
+        printWriter.println("\tinterface Visitor<R> {");
+        astDefinition.stream().forEach((rule) -> {
+            String type = rule.split("->")[0].trim();
+            printWriter.println("\t\t R visit" + type + baseName + "( " + type + " " + baseName.toLowerCase(Locale.ROOT) + ");");
+        });
+        printWriter.println("\t}");
+    }
+
+    private static void printSubclasses(String baseName, List<String> astDefinition, PrintWriter printWriter) {
+        astDefinition.stream().forEach((rule) -> printSubclass(printWriter, baseName, rule));
+    }
+
+    private static void printSubclass(PrintWriter printWriter, String baseName, String rule) {
+        printWriter.println();
+        printWriter.println("\t//    " + rule);
+
+        String[] leftAndRight = rule.split("->");
+        String className = leftAndRight[0];
+
+        printWriter.println("\tstatic class " + className.strip() + " extends " + baseName + " {");
+        printWriter.println();
+
+        printSubclassConstructor(printWriter, leftAndRight, className);
+        printSublcassInstanceVariables(printWriter, leftAndRight);
+        printSublassAcceptOverride(printWriter, className, baseName);
+
+        printWriter.println("\t}");
+
+    }
+
+    private static void printSublassAcceptOverride(PrintWriter printWriter, String className, String baseName){
+        printWriter.println();
+        printWriter.println("\t\t@Override");
+        printWriter.println("\t\t<R> R accept(Visitor<R> visitor) {");
+        printWriter.println("\t\t\treturn visitor.visit"+className.trim()+baseName.trim()+"(this);");
+        printWriter.println("\t\t}");
+    }
+
+    private static void printSublcassInstanceVariables(PrintWriter printWriter, String[] leftAndRight) {
+        String[] variables = leftAndRight[1].split(",");
+        for (String variable : variables) {
+            String[] typeAndName = variable.trim().split(" ");
+            String type = typeAndName[0].trim();
+            String name = typeAndName[1].trim();
+            printWriter.println("\t\t" + "final " + type + " " + name + ";");
+        }
+    }
+
+    private static void printSubclassConstructor(PrintWriter printWriter, String[] leftAndRight, String className) {
+        printWriter.println("\t\t" + className.strip() + "( " + leftAndRight[1].trim() + ") {");
+        String[] variables = leftAndRight[1].split(",");
+        for (String variable : variables) {
+            String[] typeAndName = variable.trim().split(" ");
+            String type = typeAndName[0].trim();
+            String name = typeAndName[1].trim();
+            printWriter.println("\t\t\t" + "this." + name + " = " + name + ";");
+        }
+        printWriter.println("\t\t}");
+    }
+
+
 }
