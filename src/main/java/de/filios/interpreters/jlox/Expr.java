@@ -7,6 +7,7 @@ abstract class Expr {
 
 	abstract <R> R accept (Visitor<R> visitor);
 
+
 	interface Visitor<R> {
 		 R visitBinaryExpr( Binary expr);
 		 R visitGroupingExpr( Grouping expr);

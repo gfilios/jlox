@@ -2,21 +2,43 @@ package de.filios.interpreters.jlox;
 
 import javax.swing.*;
 
+import java.util.List;
+
 import static de.filios.interpreters.jlox.TokenType.*;
 
-public class Interpreter implements Expr.Visitor<Object> {
+public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
 
-    public String interpret(Expr expression) {
+    public String interpret(List<Stmt> statements) {
+
         try {
-            Object value = evaluate(expression);
-            return stringify(value);
-
+            for (Stmt statement: statements) {
+                execute(statement);
+            }
         } catch (RuntimeError exception) {
             Lox.runtimeError(exception);
         }
         return "";
     }
+
+    private void execute(Stmt stmt) {
+        stmt.accept(this);
+    }
+
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt) {
+        evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Stmt.Print stmt) {
+        Object value = evaluate(stmt.expression);
+        System.out.println(stringify(value));
+        return null;
+    }
+
+
 
     private String stringify(Object object) {
         if (object == null) return "nil";
@@ -24,7 +46,7 @@ public class Interpreter implements Expr.Visitor<Object> {
         if (object instanceof Double) {
             String text = object.toString();
             if (text.endsWith(".0")) {
-                return text.substring(0, text.length() -2);
+                return text.substring(0, text.length() - 2);
             } else {
                 return text;
             }
@@ -104,6 +126,9 @@ public class Interpreter implements Expr.Visitor<Object> {
         return evaluate(expr);
     }
 
+
+
+
     private boolean isEqual(Object a, Object b) {
         if (a == null && b == null) return true;
         else if (a == null) return false;
@@ -129,7 +154,7 @@ public class Interpreter implements Expr.Visitor<Object> {
 
 
     private void checkDivideByZero(Token operator, Object a, Object b) {
-        if (a instanceof Double && b instanceof Double && ((Double) b).doubleValue()==0.0);
+        if (a instanceof Double && b instanceof Double && ((Double) b).doubleValue() == 0.0) ;
         throw new RuntimeError(operator, " Divide by Zero");
     }
 

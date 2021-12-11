@@ -16,15 +16,32 @@ public class GenerateAst {
             // "./src/main/java";
         String outputDir = args[0];
 
-        List<String> astDefinition = Arrays.asList(
+        List<String> exprAstDefinition = Arrays.asList(
                 "Binary       -> Expr left, Token operator, Expr right",
                 "Grouping     -> Expr expression",
                 "Literal      -> Object value",
                 "Unary        -> Token operator, Expr right"
         );
 
+        generateAstClass(outputDir, "Expr", "de.filios.interpreters.jlox", exprAstDefinition);
 
-        generateAstClass(outputDir, "Expr", "de.filios.interpreters.jlox", astDefinition);
+
+        /**
+         * program → statement * EOF ;
+         * statement → exprStmt | printStmt ;
+         * exprStmt → expression ";" ;
+         * printStmt → "print" expression ";" ;
+         *
+         *
+         */
+        List<String> stmtAstDefinition = Arrays.asList(
+                "Expression       -> Expr expression",
+                "Print            -> Expr expression"
+
+        );
+        generateAstClass(outputDir, "Stmt", "de.filios.interpreters.jlox", stmtAstDefinition);
+
+
     }
 
     private static void generateAstClass(String outputDir, String baseName, String packageName, List<String> astDefinition) throws IOException {
