@@ -7,7 +7,7 @@ import static de.filios.interpreters.jlox.TokenType.*;
 public class Interpreter implements Expr.Visitor<Object> {
 
 
-    public String interpret(Expr expression){
+    public String interpret(Expr expression) {
         try {
             Object value = evaluate(expression);
             return stringify(value);
@@ -18,13 +18,13 @@ public class Interpreter implements Expr.Visitor<Object> {
         return "";
     }
 
-    private String stringify(Object object){
+    private String stringify(Object object) {
         if (object == null) return "nil";
 
         if (object instanceof Double) {
             String text = object.toString();
             if (text.endsWith(".0")) {
-                return text.substring(0,text.length()-1);
+                return text.substring(0, text.length() -2);
             } else {
                 return text;
             }
@@ -71,6 +71,7 @@ public class Interpreter implements Expr.Visitor<Object> {
                 return (double) left - (double) right;
             case SLASH:
                 checkNumberOperands(expr.operator, left, right);
+                checkDivideByZero(expr.operator, left, right);
                 return (double) left / (double) right;
             case STAR:
                 checkNumberOperands(expr.operator, left, right);
@@ -79,10 +80,9 @@ public class Interpreter implements Expr.Visitor<Object> {
                 if (left instanceof Double && right instanceof Double) {
                     return (double) left + (double) right;
                 }
-                if (left instanceof String && right instanceof String) {
-                    return (String) left + (String) right;
+                if (left instanceof String || right instanceof String) {
+                    return stringify(left) + stringify(right);
                 }
-                throw new RuntimeError(expr.operator, " Operand must be a either two number or two strings" );
 
             case GREATER:
                 checkNumberOperands(expr.operator, left, right);
@@ -97,16 +97,16 @@ public class Interpreter implements Expr.Visitor<Object> {
                 checkNumberOperands(expr.operator, left, right);
                 return (double) left <= (double) right;
             case BANG_EQUAL:
-                return !isEqual(left,right);
+                return !isEqual(left, right);
             case EQUAL_EQUAL:
-                return isEqual(left,right);
+                return isEqual(left, right);
         }
         return evaluate(expr);
     }
 
-    private boolean isEqual(Object a,Object b){
-        if (a==null && b== null) return true;
-        else if (a==null) return false;
+    private boolean isEqual(Object a, Object b) {
+        if (a == null && b == null) return true;
+        else if (a == null) return false;
         return a.equals(b);
     }
 
@@ -122,13 +122,21 @@ public class Interpreter implements Expr.Visitor<Object> {
         return expr.accept(this);
     }
 
-    private void checkNumberOperand(Token operator, Object a){
+    private void checkNumberOperand(Token operator, Object a) {
         if (a instanceof Double) return;
-        throw new RuntimeError(operator, " Operand must be a number" );
+        throw new RuntimeError(operator, " Operand must be a number");
     }
 
-    private void checkNumberOperands(Token operator, Object a, Object b){
-        if (a instanceof Double && b instanceof Double) return;
-        throw new RuntimeError(operator, " Operands must be numbers" );
+
+    private void checkDivideByZero(Token operator, Object a, Object b) {
+        if (a instanceof Double && b instanceof Double && ((Double) b).doubleValue()==0.0);
+        throw new RuntimeError(operator, " Divide by Zero");
     }
+
+    private void checkNumberOperands(Token operator, Object a, Object b) {
+        if (a instanceof Double && b instanceof Double) return;
+        throw new RuntimeError(operator, " Operands must be numbers");
+    }
+
+
 }

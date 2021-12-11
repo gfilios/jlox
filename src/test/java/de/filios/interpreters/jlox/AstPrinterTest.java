@@ -20,7 +20,6 @@ class AstPrinterTest {
                 new Expr.Grouping(new Expr.Literal("45.67")));
 
         String result = new AstPrinter().print(expression);
-        System.out.println(result);
         assertEquals("(* (- 123) (group 45.67))", result);
     }
 }

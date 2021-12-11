@@ -31,16 +31,33 @@ class InterpreterTest extends TestStandardOutErr{
     void interpretWrongDoubles() {
 
         this.setUpErrorStreamCaption();
-        Expr expression = scanAndParse("\"georg\"+6");
+        Expr expression = scanAndParse("\"georg\"*6");
         new Interpreter().interpret(expression);
-        assertEquals("+  Operand must be a either two number or two strings\n[line 1]\n", errorStreamCaptor.toString());
+        assertEquals("*  Operands must be numbers\n[line 1]\n", errorStreamCaptor.toString());
         this.tearDownErrorStreamCaption();
+    }
+
+    @Test
+    void addStringsAndDouble() {
+        Expr expression = scanAndParse("\"georg\"+6");
+        assertEquals("georg6", new Interpreter().interpret(expression));
+        expression = scanAndParse("12+\"georg\"");
+        assertEquals("12georg", new Interpreter().interpret(expression));
     }
 
     @Test
     void interpretStringConcate() {
         Expr expression = scanAndParse("\"georg\" + \"filios\"");
         assertEquals("georgfilios", new Interpreter().interpret(expression));
+    }
+
+    @Test
+    void divideByZero() {
+        this.setUpErrorStreamCaption();
+        Expr expression = scanAndParse("18/0");
+        new Interpreter().interpret(expression);
+        assertEquals("/  Divide by Zero\n[line 1]\n", errorStreamCaptor.toString());
+        this.tearDownErrorStreamCaption();
     }
 
 
