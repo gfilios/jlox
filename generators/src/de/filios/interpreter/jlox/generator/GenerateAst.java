@@ -10,9 +10,12 @@ import java.util.Locale;
 
 public class GenerateAst {
 
-    private static final String outputDir = "./src/main/java";
+
 
     public static void main(String[] args) throws IOException {
+            // "./src/main/java";
+        String outputDir = args[0];
+
         List<String> astDefinition = Arrays.asList(
                 "Binary       -> Expr left, Token operator, Expr right",
                 "Grouping     -> Expr expression",
@@ -21,14 +24,14 @@ public class GenerateAst {
         );
 
 
-        generateAstClass("Expr", "de.filios.interpreters.jlox.ast", astDefinition);
+        generateAstClass(outputDir, "Expr", "de.filios.interpreters.jlox", astDefinition);
     }
 
-    private static void generateAstClass(String baseName, String packageName, List<String> astDefinition) throws IOException {
+    private static void generateAstClass(String outputDir, String baseName, String packageName, List<String> astDefinition) throws IOException {
 
         String packageDir = packageName.replace('.', '/');
         Path fullPath = Path.of(outputDir + "/" + packageDir + "/" + baseName + ".java");
-
+        System.out.println("Writing To: " + fullPath.toAbsolutePath().toString());
         PrintWriter printWriter = new PrintWriter(fullPath.toFile(), StandardCharsets.UTF_8);
 
         printClassHeader(baseName, packageName, printWriter);
@@ -54,7 +57,7 @@ public class GenerateAst {
         printWriter.println();
         printWriter.println("abstract class " + baseName + " {");
         printWriter.println();
-        printWriter.println("\tpublic abstract <R> R accept (Visitor<R> visitor);");
+        printWriter.println("\tabstract <R> R accept (Visitor<R> visitor);");
         printWriter.println();
 
     }
