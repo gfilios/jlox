@@ -12,15 +12,18 @@ class ParserTest {
     @Test
     void parseSimpleExpression() {
 
-        /*Scanner scanner = new Scanner("-123 * (45.67+37)");
+        Scanner scanner = new Scanner("-123 * (45.67+37);");
         List<Token> scannedTokens = scanner.scanTokens();
         Parser parser = new Parser(scannedTokens);
-        Expr expression = parser.parse();
+        List<Stmt> statements = parser.parse();
 
-        String result = new AstPrinter().print(expression);
+
+        Stmt.Expression statement = (Stmt.Expression) statements.get(0);
+
+        String result = new AstPrinter().print(statement.expression);
         //System.out.println(result);
         assertEquals("(* (- 123.0) (group (+ 45.67 37.0)))", result);
 
-         */
+
     }
 }

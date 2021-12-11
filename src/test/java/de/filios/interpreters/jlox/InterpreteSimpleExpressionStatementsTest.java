@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InterpreterTest extends TestStandardOutErr {
+class InterpreteSimpleExpressionStatementsTest extends TestStandardOutErr {
 
 
     @BeforeEach
@@ -84,6 +84,13 @@ class InterpreterTest extends TestStandardOutErr {
         List<Stmt> statements = scanAndParse("print 18/0;");
         new Interpreter().interpret(statements);
         assertEquals("/  Divide by Zero\n[line 1]\n", errorStreamCaptor.toString());
+    }
+
+    @Test
+    void testMultipleStatements() {
+        List<Stmt> statements = scanAndParse("print 18;print 282*3;");
+        new Interpreter().interpret(statements);
+        assertEquals("18\n846\n", outputStreamCaptor.toString());
     }
 
 
