@@ -1,5 +1,7 @@
-package de.filios.interpreters.jlox.ast;
+package de.filios.interpreters.jlox;
 
+import de.filios.interpreters.jlox.AstPrinter;
+import de.filios.interpreters.jlox.Expr;
 import de.filios.interpreters.jlox.Token;
 import de.filios.interpreters.jlox.TokenType;
 import org.junit.jupiter.api.Test;

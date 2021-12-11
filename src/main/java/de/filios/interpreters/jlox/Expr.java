@@ -1,7 +1,4 @@
-package de.filios.interpreters.jlox.ast;
-
-import java.util.List;
-import de.filios.interpreters.jlox.Token;
+package de.filios.interpreters.jlox;
 
 abstract class Expr {
 

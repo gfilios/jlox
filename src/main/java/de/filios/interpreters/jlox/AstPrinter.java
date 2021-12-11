@@ -1,4 +1,4 @@
-package de.filios.interpreters.jlox.ast;
+package de.filios.interpreters.jlox;
 
 public class AstPrinter implements Expr.Visitor <String>{
 
