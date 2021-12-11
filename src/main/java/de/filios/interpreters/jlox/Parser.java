@@ -27,6 +27,7 @@ public class Parser {
         }
     }
 
+
     /**
      * expression → equality ;
      * equality → comparison ( ( "!=" | "==" ) comparison )* ;
@@ -35,6 +36,8 @@ public class Parser {
      * factor → unary ( ( "/" | "*" ) unary )* ;
      * unary → ( "!" | "-" ) unary | primary ;
      * primary → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;
+     *
+     * TODO: Add Ternary Operator
      */
 
     // expression → equality ;

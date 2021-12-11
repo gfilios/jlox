@@ -92,13 +92,12 @@ class ScannerTest {
 
         setUpErrorStreamCaption();
 
-        Scanner scanner = new Scanner("#%?");
+        Scanner scanner = new Scanner("#%");
         List<Token> scannedTokens = scanner.scanTokens();
 
         String  expectedErrorMessages =
                 "[line 1] Error : Unexpected character - #\n" +
-                "[line 1] Error : Unexpected character - %\n" +
-                "[line 1] Error : Unexpected character - ?\n";
+                "[line 1] Error : Unexpected character - %\n";
         assertEquals(expectedErrorMessages, errorStreamCaptor.toString());
         tearDownErrorStreamCaption();
     }
@@ -144,6 +143,19 @@ class ScannerTest {
 
 
         Scanner scanner = new Scanner("hans=92.29 or print");
+        List<Token> scannedTokens = scanner.scanTokens();
+        assertArrayEquals(expectedResult.toArray(), scannedTokens.toArray());
+    }
+
+    @Test
+    void scanTernaryTokens (){
+
+        List<Token> expectedResult = new ArrayList();
+        expectedResult.add(new Token(TokenType.QUESTIONMARK, "?", null, 0));
+        expectedResult.add(new Token(TokenType.COLON, ":", null, 0));
+        expectedResult.add(new Token(TokenType.EOF, "", null, 0));
+
+        Scanner scanner = new Scanner("?:");
         List<Token> scannedTokens = scanner.scanTokens();
         assertArrayEquals(expectedResult.toArray(), scannedTokens.toArray());
     }

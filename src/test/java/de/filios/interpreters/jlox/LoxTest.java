@@ -12,32 +12,10 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LoxTest {
+class LoxTest extends TestStandardOutErr {
 
-
-    private final PrintStream standardOut = System.out;
-    private final PrintStream standardErr = System.err;
-
-    private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
-    private final ByteArrayOutputStream errorStreamCaptor = new ByteArrayOutputStream();
 
     private static String simpleJloxFile = "src/test/ressources/simple.lox";
-
-    public void setUpOuputStreamCaption() {
-        System.setOut(new PrintStream(outputStreamCaptor));
-    }
-
-    public void tearDownOuputStreamCaption() {
-        System.setOut(standardOut);
-    }
-
-    public void setUpErrorStreamCaption() {
-        System.setErr(new PrintStream(errorStreamCaptor));
-    }
-
-    public void tearDownErrorStreamCaption() {
-        System.setErr(standardErr);
-    }
 
     @org.junit.jupiter.api.Test
     @ExpectSystemExitWithStatus(64)
