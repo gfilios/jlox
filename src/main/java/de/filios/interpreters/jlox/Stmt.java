@@ -9,9 +9,24 @@ abstract class Stmt {
 
 
 	interface Visitor<R> {
+		 R visitBlockStmt( Block stmt);
 		 R visitExpressionStmt( Expression stmt);
 		 R visitPrintStmt( Print stmt);
 		 R visitVarStmt( Var stmt);
+	}
+
+	//    Block          -> List<Stmt> statements
+	static class Block extends Stmt {
+
+		Block( List<Stmt> statements) {
+			this.statements = statements;
+		}
+		final List<Stmt> statements;
+
+		@Override
+		<R> R accept(Visitor<R> visitor) {
+			return visitor.visitBlockStmt(this);
+		}
 	}
 
 	//    Expression     -> Expr expression

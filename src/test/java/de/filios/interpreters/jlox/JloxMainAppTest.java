@@ -3,16 +3,14 @@ package de.filios.interpreters.jlox;
 import com.ginsberg.junit.exit.ExpectSystemExitWithStatus;
 import com.ginsberg.junit.exit.FailOnSystemExit;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LoxTest extends TestStandardOutErr {
+class JloxMainAppTest extends TestStandardOutErr {
 
 
     private static String simpleJloxFile = "src/test/ressources/simple.lox";
