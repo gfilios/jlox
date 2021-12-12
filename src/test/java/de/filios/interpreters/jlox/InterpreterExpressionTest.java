@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InterpreteSimpleExpressionStatementsTest extends TestStandardOutErr {
+class InterpreterExpressionTest extends TestStandardOutErr {
 
 
     @BeforeEach
@@ -94,11 +94,5 @@ class InterpreteSimpleExpressionStatementsTest extends TestStandardOutErr {
     }
 
 
-    private List<Stmt> scanAndParse(String string) {
-        Scanner scanner = new Scanner(string);
-        List<Token> scannedTokens = scanner.scanTokens();
-        Parser parser = new Parser(scannedTokens);
-        List<Stmt> statements = parser.parse();
-        return statements;
-    }
+
 }

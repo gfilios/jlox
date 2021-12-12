@@ -9,10 +9,28 @@ abstract class Expr {
 
 
 	interface Visitor<R> {
+		 R visitAssignExpr( Assign expr);
 		 R visitBinaryExpr( Binary expr);
 		 R visitGroupingExpr( Grouping expr);
 		 R visitLiteralExpr( Literal expr);
 		 R visitUnaryExpr( Unary expr);
+		 R visitVariableExpr( Variable expr);
+	}
+
+	//    Assign       -> Token name, Expr value
+	static class Assign extends Expr {
+
+		Assign( Token name, Expr value) {
+			this.name = name;
+			this.value = value;
+		}
+		final Token name;
+		final Expr value;
+
+		@Override
+		<R> R accept(Visitor<R> visitor) {
+			return visitor.visitAssignExpr(this);
+		}
 	}
 
 	//    Binary       -> Expr left, Token operator, Expr right
@@ -74,6 +92,20 @@ abstract class Expr {
 		@Override
 		<R> R accept(Visitor<R> visitor) {
 			return visitor.visitUnaryExpr(this);
+		}
+	}
+
+	//    Variable     -> Token name
+	static class Variable extends Expr {
+
+		Variable( Token name) {
+			this.name = name;
+		}
+		final Token name;
+
+		@Override
+		<R> R accept(Visitor<R> visitor) {
+			return visitor.visitVariableExpr(this);
 		}
 	}
 

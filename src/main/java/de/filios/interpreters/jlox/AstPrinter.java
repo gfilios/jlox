@@ -37,4 +37,17 @@ public class AstPrinter implements Expr.Visitor <String>{
         builder.append(")");
         return builder.toString();
     }
+
+    @Override
+    public String visitVariableExpr(Expr.Variable expr) {
+        return expr.name.lexeme;
+    }
+
+    @Override
+    public String visitAssignExpr(Expr.Assign expr) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("(").append("=");
+        builder.append(expr.name.lexeme).append(" ").append(expr.value);
+        return builder.toString();
+    }
 }
