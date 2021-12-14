@@ -164,6 +164,23 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return null;
     }
 
+    @Override
+    public Object visitLogicalExpr(Expr.Logical expr) {
+        Object left = evaluate(expr.left);
+        if (expr.operator.type == OR) {
+            if (isTruthy(left)) return left;
+            else return evaluate(expr.right);
+
+        }
+
+        if (expr.operator.type == AND) {
+            if (isTruthy(left)) return evaluate(expr.right);
+            else return left;
+        }
+
+        return evaluate(expr.right);
+    }
+
     private String stringify(Object object) {
         if (object == null) return "nil";
 

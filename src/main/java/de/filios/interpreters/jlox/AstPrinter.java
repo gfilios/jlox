@@ -50,4 +50,13 @@ public class AstPrinter implements Expr.Visitor <String>{
         builder.append(expr.name.lexeme).append(" ").append(expr.value);
         return builder.toString();
     }
+
+    @Override
+    public String visitLogicalExpr(Expr.Logical expr) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("(").append(expr.left).append(" ");
+        builder.append(expr.operator.lexeme).append(" ");
+        builder.append(expr.right).append(")");
+        return builder.toString();
+    }
 }
