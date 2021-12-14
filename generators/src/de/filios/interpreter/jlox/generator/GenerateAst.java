@@ -1,5 +1,7 @@
 package de.filios.interpreter.jlox.generator;
 
+
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -42,6 +44,7 @@ public class GenerateAst {
                 "Expression     -> Expr expression",
                 "If             -> Expr condition, Stmt thenBranch, Stmt elseBranch",
                 "Print          -> Expr expression",
+                "While          -> Expr condition, Stmt body",
                 "Var            -> Token name, Expr initializer"
         );
         generateAstClass(outputDir, "Stmt", "de.filios.interpreters.jlox", stmtAstDefinition);
