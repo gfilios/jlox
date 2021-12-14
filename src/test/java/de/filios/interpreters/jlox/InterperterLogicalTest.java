@@ -24,15 +24,45 @@ class InterperterLogicalTest extends TestStandardOutErr {
         this.tearDownOuputStreamCaption();
     }
 
+
     @Test
-    void testSimpleBoolean() {
+    void testSimpleAnd() {
         StringBuilder program = new StringBuilder();
-        program.append(" true and true");
+        program.append("print (true and true);");
+        program.append("print (true and false);");
+        program.append("print (false and true);");
+        program.append("print (false and false);");
 
 
         List<Stmt> statements = scanAndParse(program.toString());
         new Interpreter().interpret(statements);
         assertEquals("",errorStreamCaptor.toString());
-        assertEquals("true\n", outputStreamCaptor.toString());
+        assertEquals("true\nfalse\nfalse\nfalse\n", outputStreamCaptor.toString());
+    }
+    @Test
+    void testSimpleOr() {
+        StringBuilder program = new StringBuilder();
+        program.append("print (true or true);");
+        program.append("print (true or false);");
+        program.append("print (false or true);");
+        program.append("print (false or false);");
+
+
+        List<Stmt> statements = scanAndParse(program.toString());
+        new Interpreter().interpret(statements);
+        assertEquals("",errorStreamCaptor.toString());
+        assertEquals("true\ntrue\ntrue\nfalse\n", outputStreamCaptor.toString());
+    }
+
+
+    void testSimpleOrAnd() {
+        StringBuilder program = new StringBuilder();
+        program.append("print (true or true and false);");
+
+
+        List<Stmt> statements = scanAndParse(program.toString());
+        new Interpreter().interpret(statements);
+        assertEquals("",errorStreamCaptor.toString());
+        assertEquals("false\n", outputStreamCaptor.toString());
     }
 }
