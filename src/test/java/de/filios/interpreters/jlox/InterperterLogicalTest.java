@@ -54,7 +54,7 @@ class InterperterLogicalTest extends TestStandardOutErr {
         assertEquals("true\ntrue\ntrue\nfalse\n", outputStreamCaptor.toString());
     }
 
-
+    @Test
     void testSimpleOrAnd() {
         StringBuilder program = new StringBuilder();
         program.append("print (true or true and false);");
@@ -62,7 +62,31 @@ class InterperterLogicalTest extends TestStandardOutErr {
 
         List<Stmt> statements = scanAndParse(program.toString());
         new Interpreter().interpret(statements);
+        assertEquals("",errorStreamCaptor.toString(), "Unexpected Error Thown:" + errorStreamCaptor.toString());
+        assertEquals("true\n", outputStreamCaptor.toString());
+    }
+
+    @Test
+    void testStringBoolean() {
+        StringBuilder program = new StringBuilder();
+        program.append("print (\"georg\" or 2);");
+
+
+        List<Stmt> statements = scanAndParse(program.toString());
+        new Interpreter().interpret(statements);
         assertEquals("",errorStreamCaptor.toString());
-        assertEquals("false\n", outputStreamCaptor.toString());
+        assertEquals("georg\n", outputStreamCaptor.toString());
+    }
+
+    @Test
+    void testNilBoolean() {
+        StringBuilder program = new StringBuilder();
+        program.append("print (nil or \"georg\" );");
+
+
+        List<Stmt> statements = scanAndParse(program.toString());
+        new Interpreter().interpret(statements);
+        assertEquals("",errorStreamCaptor.toString());
+        assertEquals("georg\n", outputStreamCaptor.toString());
     }
 }
