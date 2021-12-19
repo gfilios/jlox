@@ -2,6 +2,7 @@ package de.filios.interpreters.jlox;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static de.filios.interpreters.jlox.TokenType.*;
@@ -32,6 +33,7 @@ public class Parser {
         if (match(IF)) return ifStatement();
         if (match(PRINT)) return printStatement();
         if (match(WHILE)) return whileStatement();
+        if (match(FOR)) return forStatement();
         if (match(LEFT_BRACE)) return new Stmt.Block(block());
 
         return expressionStatement();
@@ -48,6 +50,47 @@ public class Parser {
         return new Stmt.While(condition, body);
 
     }
+
+    private Stmt forStatement() {
+
+        consume(LEFT_PAREN, "Expect '(' after for.");
+
+        Stmt initializer;
+        if (match(SEMICOLON)) {
+            initializer = null;
+        } else if (match(VAR)) {
+            initializer = varDeclaration();
+        } else {
+            initializer = expressionStatement();
+        }
+
+        Expr condition;
+        if (!match(SEMICOLON)) {
+            condition = expression();
+        } else {
+            condition = new Expr.Literal(true);
+        }
+
+        consume(SEMICOLON, "Expect ';' after for condition.");
+
+        Expr increment = null;
+        if (!match(RIGHT_PAREN)) {
+            increment = expression();
+        }
+
+        consume(RIGHT_PAREN, "Expect ')' after for.");
+
+        Stmt body = statement();
+        if (increment != null) {
+            body = new Stmt.Block(Arrays.asList(body, new Stmt.Expression(increment)));
+        }
+        body = new Stmt.While(condition, body);
+        if (initializer != null) {
+            body = new Stmt.Block(Arrays.asList(initializer, body));
+        }
+        return body;
+    }
+
     private Stmt ifStatement() {
 
         consume(LEFT_PAREN, "Expect '(' after if.");
@@ -137,7 +180,7 @@ public class Parser {
     }
 
 
-    private Expr or(){
+    private Expr or() {
         Expr expr = and();
         while (match(OR)) {
             Token operator = previous();
@@ -147,7 +190,7 @@ public class Parser {
         return expr;
     }
 
-    private Expr and(){
+    private Expr and() {
         Expr expr = equality();
         while (match(AND)) {
             Token operator = previous();
