@@ -36,9 +36,10 @@ class InterperterLogicalTest extends TestStandardOutErr {
 
         List<Stmt> statements = scanAndParse(program.toString());
         new Interpreter().interpret(statements);
-        assertEquals("",errorStreamCaptor.toString());
-        assertEquals("true\nfalse\nfalse\nfalse\n", outputStreamCaptor.toString());
+        assertEquals("",getErrorStreamAndTearDown());
+        assertEquals("true\nfalse\nfalse\nfalse\n", getOutputStreamAndTearDown());
     }
+
     @Test
     void testSimpleOr() {
         StringBuilder program = new StringBuilder();
@@ -50,8 +51,8 @@ class InterperterLogicalTest extends TestStandardOutErr {
 
         List<Stmt> statements = scanAndParse(program.toString());
         new Interpreter().interpret(statements);
-        assertEquals("",errorStreamCaptor.toString());
-        assertEquals("true\ntrue\ntrue\nfalse\n", outputStreamCaptor.toString());
+        assertEquals("",getErrorStreamAndTearDown());
+        assertEquals("true\ntrue\ntrue\nfalse\n", getOutputStreamAndTearDown());
     }
 
     @Test
@@ -62,8 +63,9 @@ class InterperterLogicalTest extends TestStandardOutErr {
 
         List<Stmt> statements = scanAndParse(program.toString());
         new Interpreter().interpret(statements);
-        assertEquals("",errorStreamCaptor.toString(), "Unexpected Error Thown:" + errorStreamCaptor.toString());
-        assertEquals("true\n", outputStreamCaptor.toString());
+        String errorResult = getErrorStreamAndTearDown();
+        assertEquals("",errorResult, "Unexpected Error Thown:" + errorResult);
+        assertEquals("true\n", getOutputStreamAndTearDown());
     }
 
     @Test
@@ -74,8 +76,8 @@ class InterperterLogicalTest extends TestStandardOutErr {
 
         List<Stmt> statements = scanAndParse(program.toString());
         new Interpreter().interpret(statements);
-        assertEquals("",errorStreamCaptor.toString());
-        assertEquals("georg\n", outputStreamCaptor.toString());
+        assertEquals("",getErrorStreamAndTearDown());
+        assertEquals("georg\n", getOutputStreamAndTearDown());
     }
 
     @Test
@@ -86,7 +88,7 @@ class InterperterLogicalTest extends TestStandardOutErr {
 
         List<Stmt> statements = scanAndParse(program.toString());
         new Interpreter().interpret(statements);
-        assertEquals("",errorStreamCaptor.toString());
-        assertEquals("georg\n", outputStreamCaptor.toString());
+        assertEquals("",getErrorStreamAndTearDown());
+        assertEquals("georg\n", getOutputStreamAndTearDown());
     }
 }

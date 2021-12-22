@@ -32,8 +32,8 @@ class InterpreterForLoopTest extends TestStandardOutErr {
 
         List<Stmt> statements = scanAndParse(program.toString());
         new Interpreter().interpret(statements);
-        assertEquals("", errorStreamCaptor.toString());
-        assertEquals("2\n", outputStreamCaptor.toString());
+        assertEquals("", getErrorStreamAndTearDown());
+        assertEquals("2\n", getOutputStreamAndTearDown());
 
     }
 
@@ -46,8 +46,8 @@ class InterpreterForLoopTest extends TestStandardOutErr {
 
         List<Stmt> statements = scanAndParse(program.toString());
         new Interpreter().interpret(statements);
-        assertEquals("", errorStreamCaptor.toString());
-        assertEquals("2\n", outputStreamCaptor.toString());
+        assertEquals("", getErrorStreamAndTearDown());
+        assertEquals("2\n", getOutputStreamAndTearDown());
 
     }
 
@@ -62,8 +62,8 @@ class InterpreterForLoopTest extends TestStandardOutErr {
 
         List<Stmt> statements = scanAndParse(program.toString());
         new Interpreter().interpret(statements);
-        assertEquals("", errorStreamCaptor.toString());
-        assertEquals("2\n10\n", outputStreamCaptor.toString());
+        assertEquals("", getErrorStreamAndTearDown());
+        assertEquals("2\n10\n", getOutputStreamAndTearDown());
 
     }
 

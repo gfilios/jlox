@@ -47,8 +47,9 @@ class InterpreterBlockTest extends TestStandardOutErr {
 
         List<Stmt> statements = scanAndParse(program.toString());
         new Interpreter().interpret(statements);
+        assertEquals("",getErrorStreamAndTearDown());
         assertEquals("inner a\nouter b\nglobal c\nouter a\nouter b\nglobal c\nglobal a\nglobal b\nglobal c\n",
-                outputStreamCaptor.toString());
+                getOutputStreamAndTearDown());
 
     }
 
@@ -64,7 +65,8 @@ class InterpreterBlockTest extends TestStandardOutErr {
 
         List<Stmt> statements = scanAndParse(program.toString());
         new Interpreter().interpret(statements);
-        assertEquals("3\n1\n", outputStreamCaptor.toString());
+        assertEquals("",getErrorStreamAndTearDown());
+        assertEquals("3\n1\n", getOutputStreamAndTearDown());
 
     }
 

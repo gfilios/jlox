@@ -27,21 +27,21 @@ class InterpreterVariableTest extends TestStandardOutErr {
     void simpleVariableAssignment() {
         List<Stmt> statements = scanAndParse("var a=1;print a;");
         new Interpreter().interpret(statements);
-        assertEquals("1\n", outputStreamCaptor.toString());
+        assertEquals("1\n", getOutputStreamAndTearDown());
     }
 
     @Test
     void simpleVariableOperation() {
         List<Stmt> statements = scanAndParse("var a=1;var b=2;print a+b;");
         new Interpreter().interpret(statements);
-        assertEquals("3\n", outputStreamCaptor.toString());
+        assertEquals("3\n", getOutputStreamAndTearDown());
     }
 
     @Test
     void simpleVariableReAssignment() {
         List<Stmt> statements = scanAndParse("var a=1;var b=2;a=3;print a+b;");
         new Interpreter().interpret(statements);
-        assertEquals("5\n", outputStreamCaptor.toString());
+        assertEquals("5\n", getOutputStreamAndTearDown());
     }
 
 
@@ -49,6 +49,6 @@ class InterpreterVariableTest extends TestStandardOutErr {
     void undefinedVariableAssignment() {
         List<Stmt> statements = scanAndParse("var a=1;var b=2;c=3;print a+b;");
         new Interpreter().interpret(statements);
-        assertEquals("c Undefined variable 'c'.\n[line 1]\n", errorStreamCaptor.toString());
+        assertEquals("c Undefined variable 'c'.\n[line 1]\n", getErrorStreamAndTearDown());
     }
 }

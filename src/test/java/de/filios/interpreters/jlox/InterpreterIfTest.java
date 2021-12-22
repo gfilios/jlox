@@ -29,8 +29,8 @@ class InterpreterIfTest extends TestStandardOutErr {
         program.append("if (1<2) print \"georg\"; else print \"Elias\";");
         List<Stmt> statements = scanAndParse(program.toString());
         new Interpreter().interpret(statements);
-        assertEquals("", errorStreamCaptor.toString());
-        assertEquals("georg\n", outputStreamCaptor.toString());
+        assertEquals("", getErrorStreamAndTearDown());
+        assertEquals("georg\n", getOutputStreamAndTearDown());
 
     }
 
@@ -41,8 +41,8 @@ class InterpreterIfTest extends TestStandardOutErr {
 
         List<Stmt> statements = scanAndParse(program.toString());
         new Interpreter().interpret(statements);
-        assertEquals("", errorStreamCaptor.toString());
-        assertEquals("Elias\n", outputStreamCaptor.toString());
+        assertEquals("", getErrorStreamAndTearDown());
+        assertEquals("Elias\n", getOutputStreamAndTearDown());
 
     }
 
@@ -57,8 +57,8 @@ class InterpreterIfTest extends TestStandardOutErr {
 
         List<Stmt> statements = scanAndParse(program.toString());
         new Interpreter().interpret(statements);
-        assertEquals("", errorStreamCaptor.toString());
-        assertEquals("georg\nElias\n", outputStreamCaptor.toString());
+        assertEquals("", getErrorStreamAndTearDown());
+        assertEquals("georg\nElias\n", getOutputStreamAndTearDown());
 
     }
 
@@ -71,8 +71,8 @@ class InterpreterIfTest extends TestStandardOutErr {
 
         List<Stmt> statements = scanAndParse(program.toString());
         new Interpreter().interpret(statements);
-        assertEquals("", errorStreamCaptor.toString());
-        assertEquals("4\nElias\n", outputStreamCaptor.toString());
+        assertEquals("", getErrorStreamAndTearDown());
+        assertEquals("4\nElias\n", getOutputStreamAndTearDown());
     }
 
     @Test
@@ -91,8 +91,8 @@ class InterpreterIfTest extends TestStandardOutErr {
 
         List<Stmt> statements = scanAndParse(program.toString());
         new Interpreter().interpret(statements);
-        assertEquals("", errorStreamCaptor.toString());
-        assertEquals("4\n", outputStreamCaptor.toString());
+        assertEquals("", getErrorStreamAndTearDown());
+        assertEquals("4\n", getOutputStreamAndTearDown());
     }
 
 }

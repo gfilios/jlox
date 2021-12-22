@@ -26,6 +26,25 @@ public class TestStandardOutErr {
         System.setErr(standardErr);
     }
 
+
+    public String getErrorStreamAndTearDown(){
+        String result = errorStreamCaptor.toString();
+        this.tearDownErrorStreamCaption();
+        return result;
+    }
+
+
+    public String getOutputStream(){
+        String result = outputStreamCaptor.toString();
+        return result;
+    }
+
+    public String getOutputStreamAndTearDown(){
+        String result = outputStreamCaptor.toString();
+        this.tearDownOuputStreamCaption();
+        return result;
+    }
+
     protected List<Stmt> scanAndParse(String string) {
         Scanner scanner = new Scanner(string);
         List<Token> scannedTokens = scanner.scanTokens();
@@ -33,4 +52,6 @@ public class TestStandardOutErr {
         List<Stmt> statements = parser.parse();
         return statements;
     }
+
+
 }

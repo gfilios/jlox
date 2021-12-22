@@ -65,9 +65,11 @@ class ScannerTest {
         expectedResult.add(new Token(TokenType.GREATER_EQUAL, ">=", null, 0));
         expectedResult.add(new Token(TokenType.LESS, "<", null, 0));
         expectedResult.add(new Token(TokenType.LESS_EQUAL, "<=", null, 0));
+        expectedResult.add(new Token(TokenType.MINUS_MINUS, "--", null, 0));
+        expectedResult.add(new Token(TokenType.PLUS_PLUS, "++", null, 0));
         expectedResult.add(new Token(TokenType.EOF, "", null, 0));
 
-        Scanner scanner = new Scanner("(){},.-+;/*!!= = == > >= < <=");
+        Scanner scanner = new Scanner("(){},.-+;/*!!= = == > >= < <=--++");
         List<Token> scannedTokens = scanner.scanTokens();
         assertArrayEquals(expectedResult.toArray(), scannedTokens.toArray());
     }
