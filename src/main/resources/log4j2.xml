@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Extra logging related to initialization of Log4j.
+ Set to debug or trace if log4j initialization is failing. -->
+<Configuration status="WARN">
+    <Appenders>
+        <!-- Console appender configuration -->
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n" />
+        </Console>
+        <RollingFile name="debugFile"
+                     fileName="logs/jlox-debug.log"
+                     filePattern="logs/$${date:yyyy-MM}/jlox-debug-%d{MM-dd-yyyy}-%i.log.gz"
+                     append="false"
+        >
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
+            <Policies>
+                <OnStartupTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy max="1"></DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <!-- Root logger referring to console appender -->
+        <Root level="debug" additivity="false">
+            <AppenderRef ref="console" level="error" />
+            <AppenderRef ref="debugFile" level="debug" />
+        </Root>
+    </Loggers>
+</Configuration>

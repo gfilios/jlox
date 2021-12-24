@@ -8,8 +8,12 @@ import java.util.List;
 import static de.filios.interpreters.jlox.TokenType.*;
 
 import de.filios.interpreters.jlox.Expr;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Parser {
+
+    private static Logger logger = LogManager.getLogger();
 
     private static class ParseError extends RuntimeException {
     }
@@ -24,6 +28,7 @@ public class Parser {
     List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
         while (!isAtEnd()) {
+            logger.debug("Attention this is an error");
             statements.add(declaration());
         }
         return statements;
