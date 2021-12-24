@@ -37,7 +37,9 @@ abstract class Expr {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			logger.debug( this.toString() + ", name=" + ( name==null?"nil":name.toString()) + ", value=" + ( value==null?"nil":value.toString()));
+			if(logger.isDebugEnabled()) {
+				logger.debug( this.toString() + ", name=" + ( name==null?"nil":name.toString()) + ", value=" + ( value==null?"nil":value.toString()));
+			}
 			return visitor.visitAssignExpr(this);
 		}
 	}
@@ -58,7 +60,9 @@ abstract class Expr {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			logger.debug( this.toString() + ", left=" + ( left==null?"nil":left.toString()) + ", operator=" + ( operator==null?"nil":operator.toString()) + ", right=" + ( right==null?"nil":right.toString()));
+			if(logger.isDebugEnabled()) {
+				logger.debug( this.toString() + ", left=" + ( left==null?"nil":left.toString()) + ", operator=" + ( operator==null?"nil":operator.toString()) + ", right=" + ( right==null?"nil":right.toString()));
+			}
 			return visitor.visitBinaryExpr(this);
 		}
 	}
@@ -75,7 +79,9 @@ abstract class Expr {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			logger.debug( this.toString() + ", expression=" + ( expression==null?"nil":expression.toString()));
+			if(logger.isDebugEnabled()) {
+				logger.debug( this.toString() + ", expression=" + ( expression==null?"nil":expression.toString()));
+			}
 			return visitor.visitGroupingExpr(this);
 		}
 	}
@@ -92,7 +98,9 @@ abstract class Expr {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			logger.debug( this.toString() + ", value=" + ( value==null?"nil":value.toString()));
+			if(logger.isDebugEnabled()) {
+				logger.debug( this.toString() + ", value=" + ( value==null?"nil":value.toString()));
+			}
 			return visitor.visitLiteralExpr(this);
 		}
 	}
@@ -113,7 +121,9 @@ abstract class Expr {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			logger.debug( this.toString() + ", left=" + ( left==null?"nil":left.toString()) + ", operator=" + ( operator==null?"nil":operator.toString()) + ", right=" + ( right==null?"nil":right.toString()));
+			if(logger.isDebugEnabled()) {
+				logger.debug( this.toString() + ", left=" + ( left==null?"nil":left.toString()) + ", operator=" + ( operator==null?"nil":operator.toString()) + ", right=" + ( right==null?"nil":right.toString()));
+			}
 			return visitor.visitLogicalExpr(this);
 		}
 	}
@@ -132,7 +142,9 @@ abstract class Expr {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			logger.debug( this.toString() + ", operator=" + ( operator==null?"nil":operator.toString()) + ", right=" + ( right==null?"nil":right.toString()));
+			if(logger.isDebugEnabled()) {
+				logger.debug( this.toString() + ", operator=" + ( operator==null?"nil":operator.toString()) + ", right=" + ( right==null?"nil":right.toString()));
+			}
 			return visitor.visitUnaryExpr(this);
 		}
 	}
@@ -149,7 +161,9 @@ abstract class Expr {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			logger.debug( this.toString() + ", name=" + ( name==null?"nil":name.toString()));
+			if(logger.isDebugEnabled()) {
+				logger.debug( this.toString() + ", name=" + ( name==null?"nil":name.toString()));
+			}
 			return visitor.visitVariableExpr(this);
 		}
 	}

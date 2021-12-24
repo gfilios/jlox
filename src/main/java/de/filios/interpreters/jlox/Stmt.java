@@ -34,7 +34,9 @@ abstract class Stmt {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			logger.debug( this.toString() + ", statements=" + ( statements==null?"nil":statements.toString()));
+			if(logger.isDebugEnabled()) {
+				logger.debug( this.toString() + ", statements=" + ( statements==null?"nil":statements.toString()));
+			}
 			return visitor.visitBlockStmt(this);
 		}
 	}
@@ -51,7 +53,9 @@ abstract class Stmt {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			logger.debug( this.toString() + ", expression=" + ( expression==null?"nil":expression.toString()));
+			if(logger.isDebugEnabled()) {
+				logger.debug( this.toString() + ", expression=" + ( expression==null?"nil":expression.toString()));
+			}
 			return visitor.visitExpressionStmt(this);
 		}
 	}
@@ -72,7 +76,9 @@ abstract class Stmt {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			logger.debug( this.toString() + ", condition=" + ( condition==null?"nil":condition.toString()) + ", thenBranch=" + ( thenBranch==null?"nil":thenBranch.toString()) + ", elseBranch=" + ( elseBranch==null?"nil":elseBranch.toString()));
+			if(logger.isDebugEnabled()) {
+				logger.debug( this.toString() + ", condition=" + ( condition==null?"nil":condition.toString()) + ", thenBranch=" + ( thenBranch==null?"nil":thenBranch.toString()) + ", elseBranch=" + ( elseBranch==null?"nil":elseBranch.toString()));
+			}
 			return visitor.visitIfStmt(this);
 		}
 	}
@@ -89,7 +95,9 @@ abstract class Stmt {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			logger.debug( this.toString() + ", expression=" + ( expression==null?"nil":expression.toString()));
+			if(logger.isDebugEnabled()) {
+				logger.debug( this.toString() + ", expression=" + ( expression==null?"nil":expression.toString()));
+			}
 			return visitor.visitPrintStmt(this);
 		}
 	}
@@ -108,7 +116,9 @@ abstract class Stmt {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			logger.debug( this.toString() + ", condition=" + ( condition==null?"nil":condition.toString()) + ", body=" + ( body==null?"nil":body.toString()));
+			if(logger.isDebugEnabled()) {
+				logger.debug( this.toString() + ", condition=" + ( condition==null?"nil":condition.toString()) + ", body=" + ( body==null?"nil":body.toString()));
+			}
 			return visitor.visitWhileStmt(this);
 		}
 	}
@@ -127,7 +137,9 @@ abstract class Stmt {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			logger.debug( this.toString() + ", name=" + ( name==null?"nil":name.toString()) + ", initializer=" + ( initializer==null?"nil":initializer.toString()));
+			if(logger.isDebugEnabled()) {
+				logger.debug( this.toString() + ", name=" + ( name==null?"nil":name.toString()) + ", initializer=" + ( initializer==null?"nil":initializer.toString()));
+			}
 			return visitor.visitVarStmt(this);
 		}
 	}

@@ -124,7 +124,9 @@ public class GenerateAst {
         printWriter.println();
         printWriter.println("\t\t@Override");
         printWriter.println("\t\t<R> R accept(Visitor<R> visitor) {");
-        printWriter.println("\t\t\tlogger.debug( " + toString + ");");
+        printWriter.println("\t\t\tif(logger.isDebugEnabled()) {");
+        printWriter.println("\t\t\t\tlogger.debug( " + toString + ");");
+        printWriter.println("\t\t\t}");
         printWriter.println("\t\t\treturn visitor.visit" + className.trim() + baseName.trim() + "(this);");
         printWriter.println("\t\t}");
     }
