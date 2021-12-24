@@ -1,7 +1,5 @@
 package de.filios.interpreter.jlox.generator;
 
-
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -12,10 +10,8 @@ import java.util.Locale;
 
 public class GenerateAst {
 
-
-
     public static void main(String[] args) throws IOException {
-            // "./src/main/java";
+        // "./src/main/java";
         String outputDir = args[0];
 
         List<String> exprAstDefinition = Arrays.asList(
@@ -67,7 +63,6 @@ public class GenerateAst {
     }
 
 
-
     private static void printClassTail(PrintWriter printWriter) {
         printWriter.println();
         printWriter.println("}");
@@ -79,11 +74,16 @@ public class GenerateAst {
         printWriter.println();
         printWriter.println("import java.util.List;");
         printWriter.println("import de.filios.interpreters.jlox.Token;");
+        printWriter.println("import org.apache.logging.log4j.LogManager;");
+        printWriter.println("import org.apache.logging.log4j.Logger;");
         printWriter.println();
         printWriter.println("abstract class " + baseName + " {");
         printWriter.println();
         printWriter.println("\tabstract <R> R accept (Visitor<R> visitor);");
         printWriter.println();
+        printWriter.println("\tpublic String toString(){");
+        printWriter.println("\t\treturn \"" + baseName + ": \" + this.getClass().getSimpleName();");
+        printWriter.println("\t}");
 
     }
 
@@ -110,24 +110,26 @@ public class GenerateAst {
 
         printWriter.println("\tstatic class " + className.strip() + " extends " + baseName + " {");
         printWriter.println();
-
+        printWriter.println("\t\tprivate static Logger logger = LogManager.getLogger( " + className.strip() + ".class );");
+        printWriter.println();
         printSubclassConstructor(printWriter, leftAndRight, className);
-        printSublcassInstanceVariables(printWriter, leftAndRight);
-        printSublassAcceptOverride(printWriter, className, baseName);
+        printSubclassInstanceVariables(printWriter, leftAndRight);
+        printSublassAcceptOverride(printWriter, className, baseName, instanceVariablesToString(leftAndRight));
 
         printWriter.println("\t}");
 
     }
 
-    private static void printSublassAcceptOverride(PrintWriter printWriter, String className, String baseName){
+    private static void printSublassAcceptOverride(PrintWriter printWriter, String className, String baseName, String toString) {
         printWriter.println();
         printWriter.println("\t\t@Override");
         printWriter.println("\t\t<R> R accept(Visitor<R> visitor) {");
-        printWriter.println("\t\t\treturn visitor.visit"+className.trim()+baseName.trim()+"(this);");
+        printWriter.println("\t\t\tlogger.debug( " + toString + ");");
+        printWriter.println("\t\t\treturn visitor.visit" + className.trim() + baseName.trim() + "(this);");
         printWriter.println("\t\t}");
     }
 
-    private static void printSublcassInstanceVariables(PrintWriter printWriter, String[] leftAndRight) {
+    private static void printSubclassInstanceVariables(PrintWriter printWriter, String[] leftAndRight) {
         String[] variables = leftAndRight[1].split(",");
         for (String variable : variables) {
             String[] typeAndName = variable.trim().split(" ");
@@ -135,6 +137,18 @@ public class GenerateAst {
             String name = typeAndName[1].trim();
             printWriter.println("\t\t" + "final " + type + " " + name + ";");
         }
+    }
+
+    private static String instanceVariablesToString(String[] leftAndRight) {
+        String result = "this.toString()";
+        String[] variables = leftAndRight[1].split(",");
+        for (String variable : variables) {
+            String[] typeAndName = variable.trim().split(" ");
+            String name = typeAndName[1].trim();
+            String logOutput = " + \", " + name + "=\" + ( " + name + "==null?\"nil\":" + name + ".toString())";
+            result = result + logOutput;
+        }
+        return result;
     }
 
     private static void printSubclassConstructor(PrintWriter printWriter, String[] leftAndRight, String className) {

@@ -11,9 +11,8 @@
         <RollingFile name="debugFile"
                      fileName="logs/jlox-debug.log"
                      filePattern="logs/$${date:yyyy-MM}/jlox-debug-%d{MM-dd-yyyy}-%i.log.gz"
-                     append="false"
-        >
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
+                     append="false">
+            <PatternLayout pattern="%-5p %m %n"/>
             <Policies>
                 <OnStartupTriggeringPolicy />
             </Policies>
@@ -22,9 +21,11 @@
     </Appenders>
     <Loggers>
         <!-- Root logger referring to console appender -->
-        <Root level="debug" additivity="false">
+        <logger name="de.filios.interpreters.jlox.Stmt" level="debug">
+            <appender-ref ref="debugFile" />
+        </logger>
+        <Root level="error" additivity="false">
             <AppenderRef ref="console" level="error" />
-            <AppenderRef ref="debugFile" level="debug" />
         </Root>
     </Loggers>
 </Configuration>

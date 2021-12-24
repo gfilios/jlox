@@ -28,7 +28,6 @@ public class Parser {
     List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
         while (!isAtEnd()) {
-            logger.debug("Attention this is an error");
             statements.add(declaration());
         }
         return statements;

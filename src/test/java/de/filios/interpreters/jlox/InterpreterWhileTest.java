@@ -26,7 +26,7 @@ class InterpreterWhileTest extends TestStandardOutErr {
 
 
     @Test
-    void testSimpleAnd() {
+    void testSimpleWhile() {
         StringBuilder program = new StringBuilder();
         program.append("var i=1;");
         program.append("while (i<10) {");
