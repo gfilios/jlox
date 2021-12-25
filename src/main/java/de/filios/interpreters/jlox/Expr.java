@@ -16,6 +16,7 @@ abstract class Expr {
 	interface Visitor<R> {
 		 R visitAssignExpr( Assign expr);
 		 R visitBinaryExpr( Binary expr);
+		 R visitCallExpr( Call expr);
 		 R visitGroupingExpr( Grouping expr);
 		 R visitLiteralExpr( Literal expr);
 		 R visitLogicalExpr( Logical expr);
@@ -64,6 +65,29 @@ abstract class Expr {
 				logger.debug( this.toString() + ", left=" + ( left==null?"nil":left.toString()) + ", operator=" + ( operator==null?"nil":operator.toString()) + ", right=" + ( right==null?"nil":right.toString()));
 			}
 			return visitor.visitBinaryExpr(this);
+		}
+	}
+
+	//    Call         -> Expr callee, Token paren, List<Expr> arguments
+	static class Call extends Expr {
+
+		private static Logger logger = LogManager.getLogger( Call.class );
+
+		Call( Expr callee, Token paren, List<Expr> arguments) {
+			this.callee = callee;
+			this.paren = paren;
+			this.arguments = arguments;
+		}
+		final Expr callee;
+		final Token paren;
+		final List<Expr> arguments;
+
+		@Override
+		<R> R accept(Visitor<R> visitor) {
+			if(logger.isDebugEnabled()) {
+				logger.debug( this.toString() + ", callee=" + ( callee==null?"nil":callee.toString()) + ", paren=" + ( paren==null?"nil":paren.toString()) + ", arguments=" + ( arguments==null?"nil":arguments.toString()));
+			}
+			return visitor.visitCallExpr(this);
 		}
 	}
 

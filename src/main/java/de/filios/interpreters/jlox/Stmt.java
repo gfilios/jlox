@@ -17,7 +17,9 @@ abstract class Stmt {
 		 R visitBlockStmt( Block stmt);
 		 R visitExpressionStmt( Expression stmt);
 		 R visitIfStmt( If stmt);
+		 R visitFunctionStmt( Function stmt);
 		 R visitPrintStmt( Print stmt);
+		 R visitReturnStmt( Return stmt);
 		 R visitWhileStmt( While stmt);
 		 R visitVarStmt( Var stmt);
 	}
@@ -83,6 +85,29 @@ abstract class Stmt {
 		}
 	}
 
+	//    Function       -> Token name, List<Token> params, List<Stmt> body
+	static class Function extends Stmt {
+
+		private static Logger logger = LogManager.getLogger( Function.class );
+
+		Function( Token name, List<Token> params, List<Stmt> body) {
+			this.name = name;
+			this.params = params;
+			this.body = body;
+		}
+		final Token name;
+		final List<Token> params;
+		final List<Stmt> body;
+
+		@Override
+		<R> R accept(Visitor<R> visitor) {
+			if(logger.isDebugEnabled()) {
+				logger.debug( this.toString() + ", name=" + ( name==null?"nil":name.toString()) + ", params=" + ( params==null?"nil":params.toString()) + ", body=" + ( body==null?"nil":body.toString()));
+			}
+			return visitor.visitFunctionStmt(this);
+		}
+	}
+
 	//    Print          -> Expr expression
 	static class Print extends Stmt {
 
@@ -99,6 +124,27 @@ abstract class Stmt {
 				logger.debug( this.toString() + ", expression=" + ( expression==null?"nil":expression.toString()));
 			}
 			return visitor.visitPrintStmt(this);
+		}
+	}
+
+	//    Return         -> Token name, Expr value
+	static class Return extends Stmt {
+
+		private static Logger logger = LogManager.getLogger( Return.class );
+
+		Return( Token name, Expr value) {
+			this.name = name;
+			this.value = value;
+		}
+		final Token name;
+		final Expr value;
+
+		@Override
+		<R> R accept(Visitor<R> visitor) {
+			if(logger.isDebugEnabled()) {
+				logger.debug( this.toString() + ", name=" + ( name==null?"nil":name.toString()) + ", value=" + ( value==null?"nil":value.toString()));
+			}
+			return visitor.visitReturnStmt(this);
 		}
 	}
 

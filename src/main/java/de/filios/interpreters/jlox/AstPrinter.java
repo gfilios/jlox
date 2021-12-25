@@ -59,4 +59,13 @@ public class AstPrinter implements Expr.Visitor <String>{
         builder.append(expr.right).append(")");
         return builder.toString();
     }
+
+    @Override
+    public String visitCallExpr(Expr.Call expr) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(expr.callee.toString());
+        return builder.toString();
+    }
+
+
 }

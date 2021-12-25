@@ -19,8 +19,13 @@ public class Environment {
         this.enclosing = enclosing;
     }
 
+
+    void define(String name, Object value){
+        values.put(name,value);
+    }
+
     void define(Token name, Object value){
-        values.put(name.lexeme,value);
+        this.define(name.lexeme,value);
     }
 
     void assign (Token name, Object value){
