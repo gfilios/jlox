@@ -79,6 +79,20 @@ public class InterpreterFunctionTest extends TestStandardOutErr {
 
 
     @Test
+    void testClock() {
+        StringBuilder program = new StringBuilder();
+        program.append("var start = clock();");
+        program.append("var end = clock();");
+        program.append("print (start<=end);");
+
+
+        List<Stmt> statements = scanAndParse(program.toString());
+        new Interpreter().interpret(statements);
+        assertEquals("true\n", getOutputStreamAndTearDown());
+
+    }
+
+    @Test
     void testSimpleReturn() {
         StringBuilder program = new StringBuilder();
         program.append("fun constantvalue() {");
