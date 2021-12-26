@@ -184,7 +184,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return null;
     }
 
-
     @Override
     public Void visitWhileStmt(Stmt.While stmt) {
 
@@ -238,7 +237,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitFunctionStmt(Stmt.Function stmt) {
-        LoxFunction function = new LoxFunction(stmt);
+        LoxFunction function = new LoxFunction(stmt,environment);
         environment.define(stmt.name.lexeme, function);
         return null;
     }
@@ -287,7 +286,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         if (a instanceof Double) return;
         throw new RuntimeError(operator, " Operand must be a number");
     }
-
 
     private void checkDivideByZero(Token operator, Object a, Object b) {
         if (a instanceof Double && b instanceof Double && ((Double) b).doubleValue() == 0.0) ;

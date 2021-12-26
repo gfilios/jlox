@@ -32,7 +32,6 @@ public class InterpreterFunctionTest extends TestStandardOutErr {
         program.append("sayHi(\"Georg\", \"Filios\");");
 
 
-
         List<Stmt> statements = scanAndParse(program.toString());
         new Interpreter().interpret(statements);
         assertEquals("", getErrorStreamAndTearDown());
@@ -95,7 +94,6 @@ public class InterpreterFunctionTest extends TestStandardOutErr {
     }
 
 
-
     @Test
     void testRecursive() {
         StringBuilder program = new StringBuilder();
@@ -120,4 +118,28 @@ public class InterpreterFunctionTest extends TestStandardOutErr {
                 "34\n" +
                 "55\n", getOutputStreamAndTearDown());
     }
+
+
+    @Test
+    void testClosure() {
+        StringBuilder program = new StringBuilder();
+        program.append("fun makeCounter(){");
+        program.append("    var i=0;");
+        program.append("    fun count() {");
+        program.append("        i = i + 1;");
+        program.append("        print i;");
+        program.append("    }");
+        program.append("    return count;");
+        program.append("}");
+        program.append("var counter = makeCounter();");
+        program.append("counter();");
+        program.append("counter();");
+        program.append("counter();");
+
+        List<Stmt> statements = scanAndParse(program.toString());
+        new Interpreter().interpret(statements);
+        assertEquals("1\n2\n3\n", getOutputStreamAndTearDown());
+
+    }
+
 }

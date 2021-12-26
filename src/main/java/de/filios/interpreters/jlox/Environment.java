@@ -5,17 +5,13 @@ import java.util.Map;
 
 public class Environment {
     private final Map<String, Object> values = new HashMap<>();
-    private Environment enclosing;
+    private final Environment enclosing;
 
     public Environment() {
         this.enclosing = null;
     }
 
     public Environment(Environment enclosing) {
-        this.enclosing = enclosing;
-    }
-
-    public void setEnclosing(Environment enclosing) {
         this.enclosing = enclosing;
     }
 

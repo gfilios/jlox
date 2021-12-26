@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 public class Parser {
 
-    private static Logger logger = LogManager.getLogger();
+    private final static Logger logger = LogManager.getLogger();
 
     private static class ParseError extends RuntimeException {
     }
@@ -43,7 +43,6 @@ public class Parser {
 
         return expressionStatement();
     }
-
 
     private Stmt whileStatement() {
 
@@ -174,6 +173,7 @@ public class Parser {
         consume(SEMICOLON, "Expect ';' after return");
         return new Stmt.Return(name ,  value);
     }
+
     private Stmt expressionStatement() {
         Expr expr = expression();
         consume(SEMICOLON, "Expect ';' after expression");
@@ -211,7 +211,6 @@ public class Parser {
         }
         return expr;
     }
-
 
     private Expr or() {
         Expr expr = and();
