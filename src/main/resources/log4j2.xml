@@ -21,7 +21,7 @@
     </Appenders>
     <Loggers>
         <!-- Root logger referring to console appender -->
-        <logger name="de.filios.interpreters.jlox.Resolver" level="debug">
+        <logger name="de.filios.interpreters.jlox.Resolver" level="error">
             <appender-ref ref="debugFile" />
         </logger>
         <Root level="error" additivity="false">

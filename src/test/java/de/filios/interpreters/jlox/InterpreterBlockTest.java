@@ -27,14 +27,15 @@ class InterpreterBlockTest extends TestStandardOutErr {
         StringBuilder program = new StringBuilder();
         program.append("var a = 1;");
         program.append("{");
-        program.append("    var a = 2 ;");
+        program.append("    var b = 1;");
+        program.append("    var a = b + 2 ;");
         program.append("    print a;");
         program.append("}");
         program.append("print a;");
 
         parseResolveInterpret(program);
         assertEquals("", getErrorStreamAndTearDown());
-        assertEquals("2\n1\n", getOutputStreamAndTearDown());
+        assertEquals("3\n1\n", getOutputStreamAndTearDown());
 
     }
 

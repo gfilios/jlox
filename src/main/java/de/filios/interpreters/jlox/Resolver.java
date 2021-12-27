@@ -27,6 +27,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     private void resolve(Stmt statement) {
+
         statement.accept(this);
     }
 
@@ -36,9 +37,11 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     private void beginScope() {
         scopes.push(new HashMap<String, Boolean>());
+        logger.debug("Begin Scope: " + scopes.peek().toString());
     }
 
     private void endScope() {
+        logger.debug("End Scope: " + scopes.peek().toString());
         scopes.pop();
     }
 
@@ -46,20 +49,24 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     private void declare(Token name) {
 
         if (scopes.isEmpty()) {
+            logger.debug("Global: " + name);
             return;
         }
 
         Map<String, Boolean> scope = scopes.peek();
-
         if (scope.containsKey(name.lexeme)) {
             Lox.error(name,"Already a variable defined with this name in this scope.");
         }
         scope.put(name.lexeme, false);
+        logger.debug("Declare in Scope: " + name+ ", " + scopes.peek().toString());
     }
 
     private void define(Token name) {
-        if (scopes.isEmpty()) return;
+        if (scopes.isEmpty()) {
+            return;
+        }
         scopes.peek().put(name.lexeme, true);
+        logger.debug("Define in Scope: " + name+ ", " + scopes.peek().toString());
     }
 
     private void resolveLocal(Expr expr, Token name) {
@@ -94,6 +101,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     public Void visitVarStmt(Stmt.Var stmt) {
         declare(stmt.name);
         if (stmt.initializer != null) {
+            logger.debug("visitVarStmt: " + stmt.name);
             resolve(stmt.initializer);
         }
         define(stmt.name);
@@ -102,6 +110,8 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitVariableExpr(Expr.Variable expr) {
+        logger.debug("visitVariableExpr: " + expr.name.lexeme);
+
         if (!scopes.isEmpty() && scopes.peek().get(expr.name.lexeme) == Boolean.FALSE) {
             Lox.error(expr.name, "Can't read local variable in its own initializer");
         }
