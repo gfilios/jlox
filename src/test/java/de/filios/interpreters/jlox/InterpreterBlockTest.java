@@ -79,9 +79,9 @@ class InterpreterBlockTest extends TestStandardOutErr {
         program.append("print a;");
 
         parseResolveInterpret(program);
-        assertEquals("[line 1] Error  at ': a'Can't read local variable in its own initializer\n" +
-                "+  Operands must be numbers\n" +
-                "[line 1]\n", getErrorStreamAndTearDown());
+        assertEquals(
+                "[line 1] Error  at ': a' Can't read local variable in its own initializer\n",
+                getErrorStreamAndTearDown());
 
     }
 

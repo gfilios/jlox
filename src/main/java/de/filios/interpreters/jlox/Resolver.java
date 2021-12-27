@@ -13,8 +13,12 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     private final Interpreter interpreter;
     private final Stack<Map<String, Boolean>> scopes = new Stack<>();
-
     private static Logger logger = LogManager.getLogger( Resolver.class );
+    private FunctionType currentFunction = FunctionType.NONE;
+
+    private enum FunctionType {
+        NONE,FUNCTION
+    }
 
     public Resolver(Interpreter interpreter) {
         this.interpreter = interpreter;
@@ -78,13 +82,16 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         }
     }
 
-    private void resolveFunction(Stmt.Function function) {
+    private void resolveFunction(Stmt.Function function, FunctionType type) {
         beginScope();
+        FunctionType enclosingFunction = currentFunction;
+        currentFunction = FunctionType.FUNCTION;
         for (Token param : function.params) {
             declare(param);
             define(param);
         }
         resolve(function.body);
+        currentFunction = enclosingFunction;
         endScope();
     }
 
@@ -113,7 +120,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         logger.debug("visitVariableExpr: " + expr.name.lexeme);
 
         if (!scopes.isEmpty() && scopes.peek().get(expr.name.lexeme) == Boolean.FALSE) {
-            Lox.error(expr.name, "Can't read local variable in its own initializer");
+            Lox.error(expr.name, " Can't read local variable in its own initializer");
         }
 
         resolveLocal(expr, expr.name);
@@ -193,7 +200,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     public Void visitFunctionStmt(Stmt.Function stmt) {
         declare(stmt.name);
         define(stmt.name);
-        resolveFunction(stmt);
+        resolveFunction(stmt, FunctionType.FUNCTION);
         return null;
     }
 
@@ -205,6 +212,9 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitReturnStmt(Stmt.Return stmt) {
+        if (currentFunction == FunctionType.NONE) {
+            Lox.error(stmt.name , " Can't return from top-level code.");
+        }
         if (stmt.value!=null) {
             resolve(stmt.value);
         }

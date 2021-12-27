@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class TestStandardOutErr {
     protected final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     protected final ByteArrayOutputStream errorStreamCaptor = new ByteArrayOutputStream();
@@ -64,7 +66,8 @@ public class TestStandardOutErr {
 
         Resolver resolver = new Resolver(interpreter);
         resolver.resolve(statements);
-
-        interpreter.interpret(statements);
+        if (errorStreamCaptor.toString().equals("")) {
+            interpreter.interpret(statements);
+        }
     }
 }
