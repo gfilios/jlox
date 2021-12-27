@@ -41,6 +41,7 @@ public class GenerateAst {
                 "Expression     -> Expr expression",
                 "If             -> Expr condition, Stmt thenBranch, Stmt elseBranch",
                 "Function       -> Token name, List<Token> params, List<Stmt> body",
+                "Class          -> Token name, List<Stmt.Functions> methods",
                 "Print          -> Expr expression",
                 "Return         -> Token name, Expr value",
                 "While          -> Expr condition, Stmt body",
@@ -113,23 +114,18 @@ public class GenerateAst {
 
         printWriter.println("\tstatic class " + className.strip() + " extends " + baseName + " {");
         printWriter.println();
-        printWriter.println("\t\tprivate static Logger logger = LogManager.getLogger( " + className.strip() + ".class );");
-        printWriter.println();
         printSubclassConstructor(printWriter, leftAndRight, className);
         printSubclassInstanceVariables(printWriter, leftAndRight);
-        printSublassAcceptOverride(printWriter, className, baseName, instanceVariablesToString(leftAndRight));
+        printSublassAcceptOverride(printWriter, className, baseName);
 
         printWriter.println("\t}");
 
     }
 
-    private static void printSublassAcceptOverride(PrintWriter printWriter, String className, String baseName, String toString) {
+    private static void printSublassAcceptOverride(PrintWriter printWriter, String className, String baseName) {
         printWriter.println();
         printWriter.println("\t\t@Override");
         printWriter.println("\t\t<R> R accept(Visitor<R> visitor) {");
-        printWriter.println("\t\t\tif(logger.isDebugEnabled()) {");
-        printWriter.println("\t\t\t\tlogger.debug( " + toString + ");");
-        printWriter.println("\t\t\t}");
         printWriter.println("\t\t\treturn visitor.visit" + className.trim() + baseName.trim() + "(this);");
         printWriter.println("\t\t}");
     }
@@ -144,17 +140,6 @@ public class GenerateAst {
         }
     }
 
-    private static String instanceVariablesToString(String[] leftAndRight) {
-        String result = "this.toString()";
-        String[] variables = leftAndRight[1].split(",");
-        for (String variable : variables) {
-            String[] typeAndName = variable.trim().split(" ");
-            String name = typeAndName[1].trim();
-            String logOutput = " + \", " + name + "=\" + ( " + name + "==null?\"nil\":" + name + ".toString())";
-            result = result + logOutput;
-        }
-        return result;
-    }
 
     private static void printSubclassConstructor(PrintWriter printWriter, String[] leftAndRight, String className) {
         printWriter.println("\t\t" + className.strip() + "( " + leftAndRight[1].trim() + ") {");
