@@ -18,6 +18,7 @@ abstract class Stmt {
 		 R visitExpressionStmt( Expression stmt);
 		 R visitIfStmt( If stmt);
 		 R visitFunctionStmt( Function stmt);
+		 R visitClassStmt( Class stmt);
 		 R visitPrintStmt( Print stmt);
 		 R visitReturnStmt( Return stmt);
 		 R visitWhileStmt( While stmt);
@@ -27,8 +28,6 @@ abstract class Stmt {
 	//    Block          -> List<Stmt> statements
 	static class Block extends Stmt {
 
-		private static Logger logger = LogManager.getLogger( Block.class );
-
 		Block( List<Stmt> statements) {
 			this.statements = statements;
 		}
@@ -36,17 +35,12 @@ abstract class Stmt {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			if(logger.isDebugEnabled()) {
-				logger.debug( this.toString() + ", statements=" + ( statements==null?"nil":statements.toString()));
-			}
 			return visitor.visitBlockStmt(this);
 		}
 	}
 
 	//    Expression     -> Expr expression
 	static class Expression extends Stmt {
-
-		private static Logger logger = LogManager.getLogger( Expression.class );
 
 		Expression( Expr expression) {
 			this.expression = expression;
@@ -55,17 +49,12 @@ abstract class Stmt {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			if(logger.isDebugEnabled()) {
-				logger.debug( this.toString() + ", expression=" + ( expression==null?"nil":expression.toString()));
-			}
 			return visitor.visitExpressionStmt(this);
 		}
 	}
 
 	//    If             -> Expr condition, Stmt thenBranch, Stmt elseBranch
 	static class If extends Stmt {
-
-		private static Logger logger = LogManager.getLogger( If.class );
 
 		If( Expr condition, Stmt thenBranch, Stmt elseBranch) {
 			this.condition = condition;
@@ -78,17 +67,12 @@ abstract class Stmt {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			if(logger.isDebugEnabled()) {
-				logger.debug( this.toString() + ", condition=" + ( condition==null?"nil":condition.toString()) + ", thenBranch=" + ( thenBranch==null?"nil":thenBranch.toString()) + ", elseBranch=" + ( elseBranch==null?"nil":elseBranch.toString()));
-			}
 			return visitor.visitIfStmt(this);
 		}
 	}
 
 	//    Function       -> Token name, List<Token> params, List<Stmt> body
 	static class Function extends Stmt {
-
-		private static Logger logger = LogManager.getLogger( Function.class );
 
 		Function( Token name, List<Token> params, List<Stmt> body) {
 			this.name = name;
@@ -101,17 +85,28 @@ abstract class Stmt {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			if(logger.isDebugEnabled()) {
-				logger.debug( this.toString() + ", name=" + ( name==null?"nil":name.toString()) + ", params=" + ( params==null?"nil":params.toString()) + ", body=" + ( body==null?"nil":body.toString()));
-			}
 			return visitor.visitFunctionStmt(this);
+		}
+	}
+
+	//    Class          -> Token name, List<Stmt.Function> methods
+	static class Class extends Stmt {
+
+		Class( Token name, List<Stmt.Function> methods) {
+			this.name = name;
+			this.methods = methods;
+		}
+		final Token name;
+		final List<Stmt.Function> methods;
+
+		@Override
+		<R> R accept(Visitor<R> visitor) {
+			return visitor.visitClassStmt(this);
 		}
 	}
 
 	//    Print          -> Expr expression
 	static class Print extends Stmt {
-
-		private static Logger logger = LogManager.getLogger( Print.class );
 
 		Print( Expr expression) {
 			this.expression = expression;
@@ -120,17 +115,12 @@ abstract class Stmt {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			if(logger.isDebugEnabled()) {
-				logger.debug( this.toString() + ", expression=" + ( expression==null?"nil":expression.toString()));
-			}
 			return visitor.visitPrintStmt(this);
 		}
 	}
 
 	//    Return         -> Token name, Expr value
 	static class Return extends Stmt {
-
-		private static Logger logger = LogManager.getLogger( Return.class );
 
 		Return( Token name, Expr value) {
 			this.name = name;
@@ -141,17 +131,12 @@ abstract class Stmt {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			if(logger.isDebugEnabled()) {
-				logger.debug( this.toString() + ", name=" + ( name==null?"nil":name.toString()) + ", value=" + ( value==null?"nil":value.toString()));
-			}
 			return visitor.visitReturnStmt(this);
 		}
 	}
 
 	//    While          -> Expr condition, Stmt body
 	static class While extends Stmt {
-
-		private static Logger logger = LogManager.getLogger( While.class );
 
 		While( Expr condition, Stmt body) {
 			this.condition = condition;
@@ -162,17 +147,12 @@ abstract class Stmt {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			if(logger.isDebugEnabled()) {
-				logger.debug( this.toString() + ", condition=" + ( condition==null?"nil":condition.toString()) + ", body=" + ( body==null?"nil":body.toString()));
-			}
 			return visitor.visitWhileStmt(this);
 		}
 	}
 
 	//    Var            -> Token name, Expr initializer
 	static class Var extends Stmt {
-
-		private static Logger logger = LogManager.getLogger( Var.class );
 
 		Var( Token name, Expr initializer) {
 			this.name = name;
@@ -183,9 +163,6 @@ abstract class Stmt {
 
 		@Override
 		<R> R accept(Visitor<R> visitor) {
-			if(logger.isDebugEnabled()) {
-				logger.debug( this.toString() + ", name=" + ( name==null?"nil":name.toString()) + ", initializer=" + ( initializer==null?"nil":initializer.toString()));
-			}
 			return visitor.visitVarStmt(this);
 		}
 	}

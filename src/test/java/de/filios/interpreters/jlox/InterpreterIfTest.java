@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InterpreterIfTest extends TestStandardOutErr {
+class IfTest extends TestStandardOutErr {
 
     @BeforeEach
     void initCaptors() {

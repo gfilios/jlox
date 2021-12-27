@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InterpreterExpressionTest extends TestStandardOutErr {
+class ExpressionTest extends TestStandardOutErr {
 
 
     @BeforeEach

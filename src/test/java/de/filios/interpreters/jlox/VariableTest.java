@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InterpreterVariableTest extends TestStandardOutErr {
+class VariableTest extends TestStandardOutErr {
 
     @BeforeEach
     void initCaptors() {

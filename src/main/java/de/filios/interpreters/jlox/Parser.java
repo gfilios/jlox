@@ -121,6 +121,7 @@ public class Parser {
 
     private Stmt declaration() {
         try {
+            if (match(CLASS)) return classDeclaration();
             if (match(FUN)) return function("function");
             if (match(VAR)) return varDeclaration();
             return statement();
@@ -148,6 +149,16 @@ public class Parser {
         return new Stmt.Function(name, parameters, body);
     }
 
+    private Stmt classDeclaration() {
+        Token name = consume(IDENTIFIER, "Expect class name.");
+        consume(LEFT_BRACE, "Expect '{' after class declaration");
+        ArrayList<Stmt.Function> methods = new ArrayList<>();
+        while (!check(RIGHT_BRACE) && !isAtEnd()) {
+            methods.add(function("method"));
+        }
+        consume(RIGHT_BRACE,"Expect '}' after class body.");
+        return new Stmt.Class(name, methods);
+    }
     private Stmt varDeclaration() {
         Token name = consume(IDENTIFIER, "Expect variable name.");
         Expr initializer = null;
