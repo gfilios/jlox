@@ -38,4 +38,17 @@ class ClassTest extends TestStandardOutErr {
 
     }
 
+    @Test
+    void testClassInstantiate() {
+        StringBuilder program = new StringBuilder();
+        program.append("class humbledumple {}");
+        program.append("var a = humbledumple();");
+        program.append("print a;");
+
+        parseResolveInterpret(program);
+        assertEquals("", getErrorStreamAndTearDown());
+        assertEquals("humbledumple instance\n", getOutputStreamAndTearDown());
+
+    }
+
 }
