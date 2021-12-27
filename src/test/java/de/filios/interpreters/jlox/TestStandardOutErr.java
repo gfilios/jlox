@@ -50,8 +50,21 @@ public class TestStandardOutErr {
         List<Token> scannedTokens = scanner.scanTokens();
         Parser parser = new Parser(scannedTokens);
         List<Stmt> statements = parser.parse();
+
+
+
         return statements;
     }
 
 
+    protected void parseResolveInterpret(StringBuilder program) {
+        List<Stmt> statements = scanAndParse(program.toString());
+
+        Interpreter interpreter = new Interpreter();
+
+        Resolver resolver = new Resolver(interpreter);
+        resolver.resolve(statements);
+
+        interpreter.interpret(statements);
+    }
 }

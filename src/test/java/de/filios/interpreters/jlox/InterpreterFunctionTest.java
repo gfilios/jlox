@@ -32,8 +32,7 @@ public class InterpreterFunctionTest extends TestStandardOutErr {
         program.append("sayHi(\"Georg\", \"Filios\");");
 
 
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         assertEquals("", getErrorStreamAndTearDown());
         assertEquals("Hi Georg Filios!\n", getOutputStreamAndTearDown());
 
@@ -53,8 +52,7 @@ public class InterpreterFunctionTest extends TestStandardOutErr {
         program.append("print x;");
 
 
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         assertEquals("", getErrorStreamAndTearDown());
         assertEquals("1\n2\n1\n", getOutputStreamAndTearDown());
 
@@ -71,8 +69,7 @@ public class InterpreterFunctionTest extends TestStandardOutErr {
         program.append("add(x,x);");
 
 
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         assertEquals(") Expected 1 arguments but got 2.\n[line 1]\n", getErrorStreamAndTearDown());
 
     }
@@ -86,8 +83,7 @@ public class InterpreterFunctionTest extends TestStandardOutErr {
         program.append("print (start<=end);");
 
 
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         assertEquals("true\n", getOutputStreamAndTearDown());
 
     }
@@ -101,8 +97,7 @@ public class InterpreterFunctionTest extends TestStandardOutErr {
         program.append("print constantvalue();");
 
 
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         assertEquals("3\n", getOutputStreamAndTearDown());
 
     }
@@ -119,8 +114,7 @@ public class InterpreterFunctionTest extends TestStandardOutErr {
         program.append("    print fib(i);");
         program.append("}");
 
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         assertEquals("1\n" +
                 "1\n" +
                 "2\n" +
@@ -150,8 +144,7 @@ public class InterpreterFunctionTest extends TestStandardOutErr {
         program.append("counter();");
         program.append("counter();");
 
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         assertEquals("1\n2\n3\n", getOutputStreamAndTearDown());
 
     }

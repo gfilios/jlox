@@ -27,8 +27,7 @@ class InterpreterIfTest extends TestStandardOutErr {
     void testIfLeftHand() {
         StringBuilder program = new StringBuilder();
         program.append("if (1<2) print \"georg\"; else print \"Elias\";");
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         assertEquals("", getErrorStreamAndTearDown());
         assertEquals("georg\n", getOutputStreamAndTearDown());
 
@@ -39,8 +38,7 @@ class InterpreterIfTest extends TestStandardOutErr {
         StringBuilder program = new StringBuilder();
         program.append("if (1>2) print \"georg\"; else print \"Elias\";");
 
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         assertEquals("", getErrorStreamAndTearDown());
         assertEquals("Elias\n", getOutputStreamAndTearDown());
 
@@ -55,8 +53,7 @@ class InterpreterIfTest extends TestStandardOutErr {
         program.append("if (a+b>10) { print \"georg\"; print \"Elias\";} else { a = 4;print a; print \"Elias\";}");
 
 
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         assertEquals("", getErrorStreamAndTearDown());
         assertEquals("georg\nElias\n", getOutputStreamAndTearDown());
 
@@ -69,8 +66,7 @@ class InterpreterIfTest extends TestStandardOutErr {
         program.append("var b = 4;");
         program.append("if (a+b<2) { print \"georg\"; print \"Elias\";} else { var a = 4;print a; print \"Elias\";}");
 
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         assertEquals("", getErrorStreamAndTearDown());
         assertEquals("4\nElias\n", getOutputStreamAndTearDown());
     }
@@ -89,8 +85,7 @@ class InterpreterIfTest extends TestStandardOutErr {
         program.append("    print a; ");
         program.append("}");
 
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         assertEquals("", getErrorStreamAndTearDown());
         assertEquals("4\n", getOutputStreamAndTearDown());
     }

@@ -35,9 +35,7 @@ class InterpreterWhileTest extends TestStandardOutErr {
         program.append("}");
 
 
-
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         String resultError =  getErrorStreamAndTearDown();
         assertEquals("",resultError,"Unexpected Error" + resultError);
         assertEquals("1\n2\n3\n4\n5\n6\n7\n8\n9\n", getOutputStreamAndTearDown());

@@ -4,8 +4,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class InterperterLogicalTest extends TestStandardOutErr {
@@ -34,8 +32,7 @@ class InterperterLogicalTest extends TestStandardOutErr {
         program.append("print (false and false);");
 
 
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         assertEquals("",getErrorStreamAndTearDown());
         assertEquals("true\nfalse\nfalse\nfalse\n", getOutputStreamAndTearDown());
     }
@@ -49,8 +46,7 @@ class InterperterLogicalTest extends TestStandardOutErr {
         program.append("print (false or false);");
 
 
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         assertEquals("",getErrorStreamAndTearDown());
         assertEquals("true\ntrue\ntrue\nfalse\n", getOutputStreamAndTearDown());
     }
@@ -61,8 +57,7 @@ class InterperterLogicalTest extends TestStandardOutErr {
         program.append("print (true or true and false);");
 
 
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         String errorResult = getErrorStreamAndTearDown();
         assertEquals("",errorResult, "Unexpected Error Thown:" + errorResult);
         assertEquals("true\n", getOutputStreamAndTearDown());
@@ -74,8 +69,7 @@ class InterperterLogicalTest extends TestStandardOutErr {
         program.append("print (\"georg\" or 2);");
 
 
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         assertEquals("",getErrorStreamAndTearDown());
         assertEquals("georg\n", getOutputStreamAndTearDown());
     }
@@ -86,8 +80,7 @@ class InterperterLogicalTest extends TestStandardOutErr {
         program.append("print (nil or \"georg\" );");
 
 
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         assertEquals("",getErrorStreamAndTearDown());
         assertEquals("georg\n", getOutputStreamAndTearDown());
     }

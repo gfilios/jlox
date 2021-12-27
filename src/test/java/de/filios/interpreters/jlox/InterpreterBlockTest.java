@@ -25,6 +25,22 @@ class InterpreterBlockTest extends TestStandardOutErr {
     @Test
     void testSimpleBlock() {
         StringBuilder program = new StringBuilder();
+        program.append("var a = 1;");
+        program.append("{");
+        program.append("    var a = 2 ;");
+        program.append("    print a;");
+        program.append("}");
+        program.append("print a;");
+
+        parseResolveInterpret(program);
+        assertEquals("", getErrorStreamAndTearDown());
+        assertEquals("2\n1\n", getOutputStreamAndTearDown());
+
+    }
+
+    @Test
+    void testNestedBlocks() {
+        StringBuilder program = new StringBuilder();
         program.append("var a = \"global a\" ;");
         program.append("var b = \"global b\" ;");
         program.append("var c = \"global c\" ;");
@@ -45,8 +61,7 @@ class InterpreterBlockTest extends TestStandardOutErr {
         program.append("print b;");
         program.append("print c;");
 
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
+        parseResolveInterpret(program);
         assertEquals("inner a\nouter b\nglobal c\nouter a\nouter b\nglobal c\nglobal a\nglobal b\nglobal c\n",
                 getOutputStreamAndTearDown());
 
@@ -62,10 +77,10 @@ class InterpreterBlockTest extends TestStandardOutErr {
         program.append("}");
         program.append("print a;");
 
-        List<Stmt> statements = scanAndParse(program.toString());
-        new Interpreter().interpret(statements);
-        assertEquals("",getErrorStreamAndTearDown());
-        assertEquals("3\n1\n", getOutputStreamAndTearDown());
+        parseResolveInterpret(program);
+        assertEquals("[line 1] Error  at ': a'Can't read local variable in its own initializer\n" +
+                "+  Operands must be numbers\n" +
+                "[line 1]\n", getErrorStreamAndTearDown());
 
     }
 
