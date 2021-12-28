@@ -1,10 +1,13 @@
 package de.filios.interpreters.jlox;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LoxClass implements LoxCallable {
 
     String name;
+    Map<String, LoxFunction> methods;
 
     @Override
     public int arity() {
@@ -17,12 +20,21 @@ public class LoxClass implements LoxCallable {
         return instance;
     }
 
-    public LoxClass(String name) {
+    public LoxClass(String name, Map<String, LoxFunction> methods) {
         this.name = name;
+        this.methods = methods;
     }
 
     @Override
     public String toString() {
         return name;
     }
+
+    public LoxFunction findMethod(String name){
+        if (this.methods.containsKey(name)) {
+            return this.methods.get(name);
+        }
+        return null;
+    }
+
 }

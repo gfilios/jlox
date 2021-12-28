@@ -24,17 +24,30 @@ class ClassTest extends TestStandardOutErr {
     @Test
     void testSimpleClass() {
         StringBuilder program = new StringBuilder();
-        program.append("class humbledumple {");
-        program.append("    id () {");
-        program.append("        return 1;");
-        program.append("    }");
-        program.append("}");
-
+        program.append("class humbledumple {}");
         program.append("print humbledumple;");
 
         parseResolveInterpret(program);
         assertEquals("", getErrorStreamAndTearDown());
         assertEquals("humbledumple\n", getOutputStreamAndTearDown());
+
+    }
+
+    @Test
+    void testClassMethod() {
+        StringBuilder program = new StringBuilder();
+        program.append("class humbledumple {");
+        program.append("    id () {");
+        program.append("        return 1;");
+        program.append("    }");
+        program.append("}");
+        program.append("var a = humbledumple();");
+
+        program.append("print a.id();");
+
+        parseResolveInterpret(program);
+        assertEquals("", getErrorStreamAndTearDown());
+        assertEquals("1\n", getOutputStreamAndTearDown());
 
     }
 
@@ -48,6 +61,34 @@ class ClassTest extends TestStandardOutErr {
         parseResolveInterpret(program);
         assertEquals("", getErrorStreamAndTearDown());
         assertEquals("humbledumple instance\n", getOutputStreamAndTearDown());
+
+    }
+
+    @Test
+    void testClassSetterGetter() {
+        StringBuilder program = new StringBuilder();
+        program.append("class humbledumple {}");
+        program.append("var a = humbledumple();");
+        program.append("a.name = \"Georg\";");
+        program.append("a.number = 12;");
+        program.append("print a.name;");
+        program.append("print a.number;");
+
+        parseResolveInterpret(program);
+        assertEquals("", getErrorStreamAndTearDown());
+        assertEquals("Georg\n12\n", getOutputStreamAndTearDown());
+
+    }
+
+    @Test
+    void testNoFieldsGetter() {
+        StringBuilder program = new StringBuilder();
+        program.append("class humbledumple {}");
+        program.append("var a = humbledumple();");
+        program.append("print a.name;");
+
+        parseResolveInterpret(program);
+        assertEquals("name Undefined property 'name'.\n[line 1]\n", getErrorStreamAndTearDown());
 
     }
 
