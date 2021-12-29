@@ -51,6 +51,26 @@ class ClassTest extends TestStandardOutErr {
 
     }
 
+
+    @Test
+    void testThisClassAccess() {
+        StringBuilder program = new StringBuilder();
+        program.append("class humbledumple {");
+        program.append("    getName () {");
+        program.append("        return this.name;");
+        program.append("    }");
+        program.append("}");
+        program.append("var a = humbledumple();");
+        program.append("a.name = 1;");
+
+        program.append("print a.getName();");
+
+        parseResolveInterpret(program);
+        assertEquals("", getErrorStreamAndTearDown());
+        assertEquals("1\n", getOutputStreamAndTearDown());
+
+    }
+
     @Test
     void testClassInstantiate() {
         StringBuilder program = new StringBuilder();

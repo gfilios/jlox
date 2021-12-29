@@ -330,7 +330,7 @@ public class Parser {
         return new Expr.Call(callee, paren, arguments);
     }
 
-    // primary → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ") | IDENTIFIEer" ;
+    // primary → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ") | IDENTIFIEER" ;
     private Expr primary() {
         if (match(FALSE)) return new Expr.Literal(false);
         if (match(TRUE)) return new Expr.Literal(true);
@@ -342,6 +342,10 @@ public class Parser {
 
         if (match(IDENTIFIER)) {
             return new Expr.Variable(previous());
+        }
+
+        if (match(THIS)) {
+            return new Expr.This(previous());
         }
         if (match(LEFT_PAREN)) {
             Expr expr = expression();

@@ -13,11 +13,16 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     private final Interpreter interpreter;
     private final Stack<Map<String, Boolean>> scopes = new Stack<>();
-    private static Logger logger = LogManager.getLogger( Resolver.class );
+    private static Logger logger = LogManager.getLogger(Resolver.class);
     private FunctionType currentFunction = FunctionType.NONE;
+    private ClassType currentClass = ClassType.NONE;
 
     private enum FunctionType {
-        NONE,FUNCTION,METHOD
+        NONE, FUNCTION, METHOD
+    }
+
+    private enum ClassType {
+        NONE, CLASS
     }
 
     public Resolver(Interpreter interpreter) {
@@ -37,40 +42,6 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     private void resolve(Expr expression) {
         expression.accept(this);
-    }
-
-    private void beginScope() {
-        scopes.push(new HashMap<String, Boolean>());
-        logger.debug("Begin Scope: " + scopes.peek().toString());
-    }
-
-    private void endScope() {
-        logger.debug("End Scope: " + scopes.peek().toString());
-        scopes.pop();
-    }
-
-
-    private void declare(Token name) {
-
-        if (scopes.isEmpty()) {
-            logger.debug("Global: " + name);
-            return;
-        }
-
-        Map<String, Boolean> scope = scopes.peek();
-        if (scope.containsKey(name.lexeme)) {
-            Lox.error(name,"Already a variable defined with this name in this scope.");
-        }
-        scope.put(name.lexeme, false);
-        logger.debug("Declare in Scope: " + name+ ", " + scopes.peek().toString());
-    }
-
-    private void define(Token name) {
-        if (scopes.isEmpty()) {
-            return;
-        }
-        scopes.peek().put(name.lexeme, true);
-        logger.debug("Define in Scope: " + name+ ", " + scopes.peek().toString());
     }
 
     private void resolveLocal(Expr expr, Token name) {
@@ -95,6 +66,42 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         endScope();
     }
 
+
+    private void beginScope() {
+        scopes.push(new HashMap<String, Boolean>());
+        logger.debug("Begin Scope: " + scopes.peek().toString());
+    }
+
+    private void endScope() {
+        logger.debug("End Scope: " + scopes.peek().toString());
+        scopes.pop();
+    }
+
+
+    private void declare(Token name) {
+
+        if (scopes.isEmpty()) {
+            logger.debug("Global: " + name);
+            return;
+        }
+
+        Map<String, Boolean> scope = scopes.peek();
+        if (scope.containsKey(name.lexeme)) {
+            Lox.error(name, "Already a variable defined with this name in this scope.");
+        }
+        scope.put(name.lexeme, false);
+        logger.debug("Declare in Scope: " + name + ", " + scopes.peek().toString());
+    }
+
+    private void define(Token name) {
+        if (scopes.isEmpty()) {
+            return;
+        }
+        scopes.peek().put(name.lexeme, true);
+        logger.debug("Define in Scope: " + name + ", " + scopes.peek().toString());
+    }
+
+
     @Override
     public Void visitBlockStmt(Stmt.Block stmt) {
         beginScope();
@@ -105,12 +112,23 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitClassStmt(Stmt.Class stmt) {
+
+        ClassType enclosingClass = currentClass;
+        currentClass = ClassType.CLASS;
+
         declare(stmt.name);
-        for (Stmt.Function method: stmt.methods){
+
+        beginScope();
+        scopes.peek().put("this", true);
+
+        for (Stmt.Function method : stmt.methods) {
             FunctionType declaration = FunctionType.METHOD;
-            resolveFunction(method,declaration);
+            resolveFunction(method, declaration);
         }
         define(stmt.name);
+
+        endScope();
+        currentClass = enclosingClass;
         return null;
     }
 
@@ -137,7 +155,15 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitThisExpr(Expr.This expr) {
+        if (currentClass == ClassType.NONE) {
+            Lox.error(expr.keyword, " Can't use 'this' outside a class.");
+        }
 
+        resolveLocal(expr, expr.keyword);
+        return null;
+    }
 
     @Override
     public Void visitAssignExpr(Expr.Assign expr) {
@@ -157,7 +183,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     @Override
     public Void visitCallExpr(Expr.Call expr) {
         resolve(expr.callee);
-        for (Expr argument: expr.arguments){
+        for (Expr argument : expr.arguments) {
             resolve(argument);
         }
         return null;
@@ -236,9 +262,9 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     @Override
     public Void visitReturnStmt(Stmt.Return stmt) {
         if (currentFunction == FunctionType.NONE) {
-            Lox.error(stmt.name , " Can't return from top-level code.");
+            Lox.error(stmt.name, " Can't return from top-level code.");
         }
-        if (stmt.value!=null) {
+        if (stmt.value != null) {
             resolve(stmt.value);
         }
         return null;
