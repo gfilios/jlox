@@ -112,4 +112,57 @@ class ClassTest extends TestStandardOutErr {
 
     }
 
+
+    @Test
+    void testInitCall() {
+        StringBuilder program = new StringBuilder();
+        program.append("class humbledumple {");
+        program.append("    init () {");
+        program.append("       print \"Georg\";");
+        program.append("    }");
+        program.append("}");
+        program.append("var a = humbledumple();");
+
+        parseResolveInterpret(program);
+        assertEquals("", getErrorStreamAndTearDown());
+        assertEquals("Georg\n", getOutputStreamAndTearDown());
+
+    }
+
+    @Test
+    void testInitVariableInit() {
+        StringBuilder program = new StringBuilder();
+        program.append("class humbledumple {");
+        program.append("    init () {");
+        program.append("        this.name = \"Georg\";");
+        program.append("    }");
+        program.append("}");
+        program.append("var a = humbledumple();");
+        program.append("print a.name;");
+
+        parseResolveInterpret(program);
+        assertEquals("", getErrorStreamAndTearDown());
+        assertEquals("Georg\n", getOutputStreamAndTearDown());
+
+    }
+
+    @Test
+    void testSuperclass() {
+        StringBuilder program = new StringBuilder();
+        program.append("class Doughnut {");
+        program.append("    cook () {");
+        program.append("        print \"Fry\";");
+        program.append("    }");
+        program.append("}");
+        program.append("class BostonCream < Doughnut {}");
+
+        program.append("var a = BostonCream();");
+        program.append("a.cook();");
+
+        parseResolveInterpret(program);
+        assertEquals("", getErrorStreamAndTearDown());
+        assertEquals("Fry\n", getOutputStreamAndTearDown());
+
+    }
+
 }

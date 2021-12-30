@@ -18,7 +18,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     private ClassType currentClass = ClassType.NONE;
 
     private enum FunctionType {
-        NONE, FUNCTION, METHOD
+        NONE, FUNCTION, INITIALIZER, METHOD
     }
 
     private enum ClassType {
@@ -112,20 +112,28 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitClassStmt(Stmt.Class stmt) {
-
         ClassType enclosingClass = currentClass;
         currentClass = ClassType.CLASS;
 
         declare(stmt.name);
+        if (stmt.superclass!=null) {
+            resolve(stmt.superclass);
+        }
 
         beginScope();
         scopes.peek().put("this", true);
 
         for (Stmt.Function method : stmt.methods) {
             FunctionType declaration = FunctionType.METHOD;
+            if (method.name.lexeme.equals("init")) {
+                declaration = FunctionType.INITIALIZER;
+            }
             resolveFunction(method, declaration);
         }
         define(stmt.name);
+        if(stmt.superclass!=null && stmt.name.lexeme.equals(stmt.superclass.name.lexeme)){
+            Lox.error(stmt.superclass.name,"A class can't inherit from itself.");
+        }
 
         endScope();
         currentClass = enclosingClass;
@@ -136,7 +144,6 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     public Void visitVarStmt(Stmt.Var stmt) {
         declare(stmt.name);
         if (stmt.initializer != null) {
-            logger.debug("visitVarStmt: " + stmt.name);
             resolve(stmt.initializer);
         }
         define(stmt.name);
@@ -145,9 +152,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitVariableExpr(Expr.Variable expr) {
-        logger.debug("visitVariableExpr: " + expr.name.lexeme);
-
-        if (!scopes.isEmpty() && scopes.peek().get(expr.name.lexeme) == Boolean.FALSE) {
+      if (!scopes.isEmpty() && scopes.peek().get(expr.name.lexeme) == Boolean.FALSE) {
             Lox.error(expr.name, " Can't read local variable in its own initializer");
         }
 
@@ -263,6 +268,8 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     public Void visitReturnStmt(Stmt.Return stmt) {
         if (currentFunction == FunctionType.NONE) {
             Lox.error(stmt.name, " Can't return from top-level code.");
+        } else if (currentFunction == FunctionType.INITIALIZER) {
+            Lox.error(stmt.name, " Can't return a value from init methods. .");
         }
         if (stmt.value != null) {
             resolve(stmt.value);
