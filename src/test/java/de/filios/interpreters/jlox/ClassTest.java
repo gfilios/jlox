@@ -191,4 +191,32 @@ class ClassTest extends TestStandardOutErr {
 
     }
 
+    @Test
+    void testSuperWithoutInheritancelass() {
+        StringBuilder program = new StringBuilder();
+        program.append("class Doughnut {");
+        program.append("}");
+        program.append("class BostonCream { cook() { super.cook();}}");
+
+        program.append("var a = BostonCream();");
+        program.append("a.cook();");
+
+        parseResolveInterpret(program);
+        assertEquals("[line 1] Error  at ': super' Can't use 'super' in a class without super class.\n", getErrorStreamAndTearDown());
+
+    }
+
+    @Test
+    void testSuperOutsideclass() {
+        StringBuilder program = new StringBuilder();
+        program.append("class Doughnut {");
+        program.append("}");
+
+        program.append("super.cook();");
+
+        parseResolveInterpret(program);
+        assertEquals("[line 1] Error  at ': super' Can't use 'super' outside a class.\n", getErrorStreamAndTearDown());
+
+    }
+
 }
