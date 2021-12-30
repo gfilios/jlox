@@ -165,4 +165,30 @@ class ClassTest extends TestStandardOutErr {
 
     }
 
+    @Test
+    void testSuperclassCascade() {
+        StringBuilder program = new StringBuilder();
+        program.append("class Doughnut {");
+        program.append("    cook () {");
+        program.append("        print \"Fry until golden brown.\";");
+        program.append("    }");
+        program.append("}");
+        program.append("class BostonCream < Doughnut {");
+        program.append("    cook () {");
+        program.append("        super.cook();");
+        program.append("        print \"Pipe full of custard and coat with chocoloate.\";");
+        program.append("    }");
+        program.append("}");
+        program.append("var a = BostonCream();");
+        program.append("a.cook();");
+
+        parseResolveInterpret(program);
+        assertEquals("", getErrorStreamAndTearDown());
+        assertEquals(
+                "Fry until golden brown.\n" +
+                "Pipe full of custard and coat with chocoloate.\n",
+                getOutputStreamAndTearDown());
+
+    }
+
 }

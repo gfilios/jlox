@@ -120,9 +120,13 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
             resolve(stmt.superclass);
         }
 
+        if (stmt.superclass!=null) {
+            beginScope();
+            scopes.peek().put("super",true);
+        }
+
         beginScope();
         scopes.peek().put("this", true);
-
         for (Stmt.Function method : stmt.methods) {
             FunctionType declaration = FunctionType.METHOD;
             if (method.name.lexeme.equals("init")) {
@@ -134,8 +138,11 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         if(stmt.superclass!=null && stmt.name.lexeme.equals(stmt.superclass.name.lexeme)){
             Lox.error(stmt.superclass.name,"A class can't inherit from itself.");
         }
-
         endScope();
+
+        if (stmt.superclass!=null) {
+            endScope();
+        }
         currentClass = enclosingClass;
         return null;
     }
@@ -166,6 +173,15 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
             Lox.error(expr.keyword, " Can't use 'this' outside a class.");
         }
 
+        resolveLocal(expr, expr.keyword);
+        return null;
+    }
+
+    @Override
+    public Void visitSuperExpr(Expr.Super expr) {
+        if (currentClass == ClassType.NONE) {
+            Lox.error(expr.keyword, " Can't use 'super' outside a class.");
+        }
         resolveLocal(expr, expr.keyword);
         return null;
     }

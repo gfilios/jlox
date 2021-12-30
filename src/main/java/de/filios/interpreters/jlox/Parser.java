@@ -335,8 +335,10 @@ public class Parser {
         return new Expr.Call(callee, paren, arguments);
     }
 
-    // primary → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ") | IDENTIFIEER" ;
-    private Expr primary() {
+    // primary → "true" | "false" | "nil" | "this" | NUMBER | STRING
+    //                  | IDENTIFIER | "(" expression ")" | "super" "." IDENTIFIER ;
+    //
+   private Expr primary() {
         if (match(FALSE)) return new Expr.Literal(false);
         if (match(TRUE)) return new Expr.Literal(true);
         if (match(NIL)) return new Expr.Literal(null);
@@ -352,6 +354,14 @@ public class Parser {
         if (match(THIS)) {
             return new Expr.This(previous());
         }
+
+       if (match(SUPER)) {
+           Token keyword = previous();
+           consume(DOT,"Expect '.' after 'super'.");
+           Token method = consume(IDENTIFIER,"Expect superclass method name");
+           return new Expr.Super(keyword,method);
+       }
+
         if (match(LEFT_PAREN)) {
             Expr expr = expression();
             consume(RIGHT_PAREN, "Expect ')' after expression");
